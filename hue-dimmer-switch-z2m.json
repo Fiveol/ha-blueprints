@@ -7,7 +7,6 @@ blueprint:
       name: Action Sensor
       selector:
         entity:
-          integration: mqtt
           domain: sensor
     helper_last_controller_event:
       name: Helper - Last Controller Event
@@ -22,106 +21,136 @@ blueprint:
           min: 10
           max: 2000
           step: 10
-    power_1_click: { action: [] }
-    power_2_click: { action: [] }
-    power_3_click: { action: [] }
-    power_4_click: { action: [] }
-    power_5_click: { action: [] }
-    power_6_click: { action: [] }
-    power_7_click: { action: [] }
-    power_8_click: { action: [] }
-    power_9_click: { action: [] }
-    power_10_click: { action: [] }
-    power_1s_hold: { action: [] }
-    power_3s_hold: { action: [] }
-    power_5s_hold: { action: [] }
-    power_10s_hold: { action: [] }
-    power_1click_1s_hold: { action: [] }
-    power_1click_3s_hold: { action: [] }
-    power_1click_5s_hold: { action: [] }
-    power_1click_10s_hold: { action: [] }
-    power_1s_hold_1click: { action: [] }
-    power_3s_hold_1click: { action: [] }
-    power_5s_hold_1click: { action: [] }
-    power_10s_hold_1click: { action: [] }
 
-    up_1_click: { action: [] }
-    up_2_click: { action: [] }
-    up_3_click: { action: [] }
-    up_4_click: { action: [] }
-    up_5_click: { action: [] }
-    up_6_click: { action: [] }
-    up_7_click: { action: [] }
-    up_8_click: { action: [] }
-    up_9_click: { action: [] }
-    up_10_click: { action: [] }
-    up_1s_hold: { action: [] }
-    up_3s_hold: { action: [] }
-    up_5s_hold: { action: [] }
-    up_10s_hold: { action: [] }
-    up_1click_1s_hold: { action: [] }
-    up_1click_3s_hold: { action: [] }
-    up_1click_5s_hold: { action: [] }
-    up_1click_10s_hold: { action: [] }
-    up_1s_hold_1click: { action: [] }
-    up_3s_hold_1click: { action: [] }
-    up_5s_hold_1click: { action: [] }
-    up_10s_hold_1click: { action: [] }
+    # ----------------- POWER BUTTON -----------------
+    {% for n in range(1, 11) %}
+    power_{{n}}_click:
+      name: Power {{n}} Click
+      selector:
+        action: {}
+    {% endfor %}
+    {% for t in ['1s','3s','5s','10s'] %}
+    power_{{t}}_hold:
+      name: Power {{t}} Hold
+      selector:
+        action: {}
+    {% endfor %}
+    {% for t in ['1s','3s','5s','10s'] %}
+    power_1click_{{t}}_hold:
+      name: Power 1 Click + {{t}} Hold
+      selector:
+        action: {}
+    power_{{t}}_hold_1click:
+      name: Power {{t}} Hold + 1 Click
+      selector:
+        action: {}
+    {% endfor %}
 
-    down_1_click: { action: [] }
-    down_2_click: { action: [] }
-    down_3_click: { action: [] }
-    down_4_click: { action: [] }
-    down_5_click: { action: [] }
-    down_6_click: { action: [] }
-    down_7_click: { action: [] }
-    down_8_click: { action: [] }
-    down_9_click: { action: [] }
-    down_10_click: { action: [] }
-    down_1s_hold: { action: [] }
-    down_3s_hold: { action: [] }
-    down_5s_hold: { action: [] }
-    down_10s_hold: { action: [] }
-    down_1click_1s_hold: { action: [] }
-    down_1click_3s_hold: { action: [] }
-    down_1click_5s_hold: { action: [] }
-    down_1click_10s_hold: { action: [] }
-    down_1s_hold_1click: { action: [] }
-    down_3s_hold_1click: { action: [] }
-    down_5s_hold_1click: { action: [] }
-    down_10s_hold_1click: { action: [] }
+    # ----------------- UP BUTTON -----------------
+    {% for n in range(1, 11) %}
+    up_{{n}}_click:
+      name: Up {{n}} Click
+      selector:
+        action: {}
+    {% endfor %}
+    {% for t in ['1s','3s','5s','10s'] %}
+    up_{{t}}_hold:
+      name: Up {{t}} Hold
+      selector:
+        action: {}
+    {% endfor %}
+    {% for t in ['1s','3s','5s','10s'] %}
+    up_1click_{{t}}_hold:
+      name: Up 1 Click + {{t}} Hold
+      selector:
+        action: {}
+    up_{{t}}_hold_1click:
+      name: Up {{t}} Hold + 1 Click
+      selector:
+        action: {}
+    {% endfor %}
 
-    hue_1_click: { action: [] }
-    hue_2_click: { action: [] }
-    hue_3_click: { action: [] }
-    hue_4_click: { action: [] }
-    hue_5_click: { action: [] }
-    hue_6_click: { action: [] }
-    hue_7_click: { action: [] }
-    hue_8_click: { action: [] }
-    hue_9_click: { action: [] }
-    hue_10_click: { action: [] }
-    hue_1s_hold: { action: [] }
-    hue_3s_hold: { action: [] }
-    hue_5s_hold: { action: [] }
-    hue_10s_hold: { action: [] }
-    hue_1click_1s_hold: { action: [] }
-    hue_1click_3s_hold: { action: [] }
-    hue_1click_5s_hold: { action: [] }
-    hue_1click_10s_hold: { action: [] }
-    hue_1s_hold_1click: { action: [] }
-    hue_3s_hold_1click: { action: [] }
-    hue_5s_hold_1click: { action: [] }
-    hue_10s_hold_1click: { action: [] }
+    # ----------------- DOWN BUTTON -----------------
+    {% for n in range(1, 11) %}
+    down_{{n}}_click:
+      name: Down {{n}} Click
+      selector:
+        action: {}
+    {% endfor %}
+    {% for t in ['1s','3s','5s','10s'] %}
+    down_{{t}}_hold:
+      name: Down {{t}} Hold
+      selector:
+        action: {}
+    {% endfor %}
+    {% for t in ['1s','3s','5s','10s'] %}
+    down_1click_{{t}}_hold:
+      name: Down 1 Click + {{t}} Hold
+      selector:
+        action: {}
+    down_{{t}}_hold_1click:
+      name: Down {{t}} Hold + 1 Click
+      selector:
+        action: {}
+    {% endfor %}
 
-    power_up: { action: [] }
-    power_down: { action: [] }
-    power_hue: { action: [] }
-    hue_up: { action: [] }
-    hue_down: { action: [] }
-    power_hue_up: { action: [] }
-    power_hue_down: { action: [] }
-    power_hue_up_down: { action: [] }
+    # ----------------- HUE BUTTON -----------------
+    {% for n in range(1, 11) %}
+    hue_{{n}}_click:
+      name: Hue {{n}} Click
+      selector:
+        action: {}
+    {% endfor %}
+    {% for t in ['1s','3s','5s','10s'] %}
+    hue_{{t}}_hold:
+      name: Hue {{t}} Hold
+      selector:
+        action: {}
+    {% endfor %}
+    {% for t in ['1s','3s','5s','10s'] %}
+    hue_1click_{{t}}_hold:
+      name: Hue 1 Click + {{t}} Hold
+      selector:
+        action: {}
+    hue_{{t}}_hold_1click:
+      name: Hue {{t}} Hold + 1 Click
+      selector:
+        action: {}
+    {% endfor %}
+
+    # ----------------- MULTI-BUTTON COMBOS -----------------
+    power_up:
+      name: Power + Up Combo
+      selector:
+        action: {}
+    power_down:
+      name: Power + Down Combo
+      selector:
+        action: {}
+    power_hue:
+      name: Power + Hue Combo
+      selector:
+        action: {}
+    hue_up:
+      name: Hue + Up Combo
+      selector:
+        action: {}
+    hue_down:
+      name: Hue + Down Combo
+      selector:
+        action: {}
+    power_hue_up:
+      name: Power + Hue + Up Combo
+      selector:
+        action: {}
+    power_hue_down:
+      name: Power + Hue + Down Combo
+      selector:
+        action: {}
+    power_hue_up_down:
+      name: Power + Hue + Up + Down Combo
+      selector:
+        action: {}
 
 trigger:
   - platform: state
