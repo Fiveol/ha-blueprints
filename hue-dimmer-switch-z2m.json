@@ -1,6 +1,6 @@
 blueprint:
-  name: Hue Dimmer Switch Z2M (God Mode) - Full Edition
-  description: "Advanced logic for Hue Dimmer V2. 5 clicks, 1/5/10s holds, and hybrid sequences for ALL buttons."
+  name: Hue Dimmer Switch Z2M
+  description: "Advanced logic for Hue Dimmer V2. Supports 5 clicks per button, multiple hold levels, and hybrid click-hold sequences."
   domain: automation
   input:
     action_sensor:
@@ -10,13 +10,11 @@ blueprint:
           domain: sensor
     helper_last_event:
       name: Text Helper (Input Text)
-      description: "Create an input_text helper to store state JSON."
       selector:
         entity:
           domain: input_text
     click_delay:
       name: Multi-click Delay
-      description: Window to wait for next click (ms).
       default: 350
       selector:
         number:
@@ -24,41 +22,41 @@ blueprint:
           max: 1000
           unit_of_measurement: ms
 
-    # --- ON BUTTON ---
+    # --- ACTIONS: ON ---
     on_initial_press:
-      name: ON - Immediate Press
+      name: ON - Initial Press
       default: []
       selector: { action: {} }
     on_click_1:
-      name: ON - Single Click
+      name: ON - Click 1
       default: []
       selector: { action: {} }
     on_click_2:
-      name: ON - Double Click
+      name: ON - Click 2
       default: []
       selector: { action: {} }
     on_click_3:
-      name: ON - Triple Click
+      name: ON - Click 3
       default: []
       selector: { action: {} }
     on_click_4:
-      name: ON - Quad Click
+      name: ON - Click 4
       default: []
       selector: { action: {} }
     on_click_5:
-      name: ON - Quint Click
+      name: ON - Click 5
       default: []
       selector: { action: {} }
     on_hold_1s:
-      name: ON - Short Hold (1s)
+      name: ON - Hold 1s
       default: []
       selector: { action: {} }
     on_hold_5s:
-      name: ON - Medium Hold (5s)
+      name: ON - Hold 5s
       default: []
       selector: { action: {} }
     on_hold_10s:
-      name: ON - Long Hold (10s)
+      name: ON - Hold 10s
       default: []
       selector: { action: {} }
     on_click_hold_1s:
@@ -70,41 +68,41 @@ blueprint:
       default: []
       selector: { action: {} }
 
-    # --- UP BUTTON ---
+    # --- ACTIONS: UP ---
     up_initial_press:
-      name: UP - Immediate Press
+      name: UP - Initial Press
       default: []
       selector: { action: {} }
     up_click_1:
-      name: UP - Single Click
+      name: UP - Click 1
       default: []
       selector: { action: {} }
     up_click_2:
-      name: UP - Double Click
+      name: UP - Click 2
       default: []
       selector: { action: {} }
     up_click_3:
-      name: UP - Triple Click
+      name: UP - Click 3
       default: []
       selector: { action: {} }
     up_click_4:
-      name: UP - Quad Click
+      name: UP - Click 4
       default: []
       selector: { action: {} }
     up_click_5:
-      name: UP - Quint Click
+      name: UP - Click 5
       default: []
       selector: { action: {} }
     up_hold_1s:
-      name: UP - Short Hold (1s)
+      name: UP - Hold 1s
       default: []
       selector: { action: {} }
     up_hold_5s:
-      name: UP - Medium Hold (5s)
+      name: UP - Hold 5s
       default: []
       selector: { action: {} }
     up_hold_10s:
-      name: UP - Long Hold (10s)
+      name: UP - Hold 10s
       default: []
       selector: { action: {} }
     up_click_hold_1s:
@@ -115,41 +113,42 @@ blueprint:
       name: UP - Hold then Click
       default: []
       selector: { action: {} }
-# --- DOWN BUTTON ---
+
+    # --- ACTIONS: DOWN ---
     down_initial_press:
-      name: DOWN - Immediate Press
+      name: DOWN - Initial Press
       default: []
       selector: { action: {} }
     down_click_1:
-      name: DOWN - Single Click
+      name: DOWN - Click 1
       default: []
       selector: { action: {} }
     down_click_2:
-      name: DOWN - Double Click
+      name: DOWN - Click 2
       default: []
       selector: { action: {} }
     down_click_3:
-      name: DOWN - Triple Click
+      name: DOWN - Click 3
       default: []
       selector: { action: {} }
     down_click_4:
-      name: DOWN - Quad Click
+      name: DOWN - Click 4
       default: []
       selector: { action: {} }
     down_click_5:
-      name: DOWN - Quint Click
+      name: DOWN - Click 5
       default: []
       selector: { action: {} }
     down_hold_1s:
-      name: DOWN - Short Hold (1s)
+      name: DOWN - Hold 1s
       default: []
       selector: { action: {} }
     down_hold_5s:
-      name: DOWN - Medium Hold (5s)
+      name: DOWN - Hold 5s
       default: []
       selector: { action: {} }
     down_hold_10s:
-      name: DOWN - Long Hold (10s)
+      name: DOWN - Hold 10s
       default: []
       selector: { action: {} }
     down_click_hold_1s:
@@ -161,41 +160,41 @@ blueprint:
       default: []
       selector: { action: {} }
 
-    # --- OFF BUTTON ---
+    # --- ACTIONS: OFF ---
     off_initial_press:
-      name: OFF - Immediate Press
+      name: OFF - Initial Press
       default: []
       selector: { action: {} }
     off_click_1:
-      name: OFF - Single Click
+      name: OFF - Click 1
       default: []
       selector: { action: {} }
     off_click_2:
-      name: OFF - Double Click
+      name: OFF - Click 2
       default: []
       selector: { action: {} }
     off_click_3:
-      name: OFF - Triple Click
+      name: OFF - Click 3
       default: []
       selector: { action: {} }
     off_click_4:
-      name: OFF - Quad Click
+      name: OFF - Click 4
       default: []
       selector: { action: {} }
     off_click_5:
-      name: OFF - Quint Click
+      name: OFF - Click 5
       default: []
       selector: { action: {} }
     off_hold_1s:
-      name: OFF - Short Hold (1s)
+      name: OFF - Hold 1s
       default: []
       selector: { action: {} }
     off_hold_5s:
-      name: OFF - Medium Hold (5s)
+      name: OFF - Hold 5s
       default: []
       selector: { action: {} }
     off_hold_10s:
-      name: OFF - Long Hold (10s)
+      name: OFF - Hold 10s
       default: []
       selector: { action: {} }
     off_click_hold_1s:
@@ -217,6 +216,7 @@ trigger:
 condition:
   - condition: template
     value_template: "{{ trigger.to_state.state not in ['', 'None', 'unknown', 'unavailable'] }}"
+
 action:
   - variables:
       command: "{{ trigger.to_state.state }}"
@@ -262,7 +262,7 @@ action:
                 sequence: !input off_initial_press
 
   - choose:
-      # --- HOLD LOGIC (Timing & Release) ---
+      # --- HOLD LOGIC ---
       - conditions: "{{ type == 'hold' }}"
         sequence:
           - wait_for_trigger:
@@ -278,7 +278,6 @@ action:
             data:
               value: '{"count": 0, "last_time": {{ as_timestamp(now()) * 1000 }}, "btn": "{{ button }}", "cmd": "hold_release"}'
           - choose:
-              # Click-then-Hold Sequence
               - conditions: "{{ is_rapid and is_same_btn and json_data.cmd == 'press' }}"
                 sequence:
                   - choose:
@@ -290,7 +289,6 @@ action:
                         sequence: !input down_click_hold_1s
                       - conditions: "{{ button == 'off' }}"
                         sequence: !input off_click_hold_1s
-              # Standard Timed Holds
               - conditions: "{{ hold_dur >= 10 }}"
                 sequence:
                   - choose:
@@ -302,7 +300,7 @@ action:
                         sequence: !input down_hold_10s
                       - conditions: "{{ button == 'off' }}"
                         sequence: !input off_hold_10s
-- conditions: "{{ hold_dur >= 5 }}"
+              - conditions: "{{ hold_dur >= 5 }}"
                 sequence:
                   - choose:
                       - conditions: "{{ button == 'on' }}"
@@ -325,10 +323,9 @@ action:
                       - conditions: "{{ button == 'off' }}"
                         sequence: !input off_hold_1s
 
-      # --- MULTI-CLICK & SEQUENCE LOGIC ---
+      # --- MULTI-CLICK & SEQUENCES ---
       - conditions: "{{ type == 'press' }}"
         sequence:
-          # Sequence: Hold-Release then Click (within delay window)
           - choose:
               - conditions: "{{ is_rapid and is_same_btn and json_data.cmd == 'hold_release' }}"
                 sequence:
@@ -341,17 +338,11 @@ action:
                         sequence: !input down_hold_1s_click
                       - conditions: "{{ button == 'off' }}"
                         sequence: !input off_hold_1s_click
-          
-          # Wait window to allow for more clicks to register
           - delay:
               milliseconds: "{{ delay_val }}"
-          
-          # Verification: Only proceed if this specific automation run is the "final" click
           - condition: template
             value_template: "{{ (states(helper) | from_json).count == new_count }}"
-            
           - choose:
-              # ON BUTTON MULTI-CLICK
               - conditions: "{{ button == 'on' }}"
                 sequence:
                   - choose:
@@ -365,8 +356,6 @@ action:
                         sequence: !input on_click_4
                       - conditions: "{{ new_count == 5 }}"
                         sequence: !input on_click_5
-
-              # UP BUTTON MULTI-CLICK
               - conditions: "{{ button == 'up' }}"
                 sequence:
                   - choose:
@@ -380,7 +369,6 @@ action:
                         sequence: !input up_click_4
                       - conditions: "{{ new_count == 5 }}"
                         sequence: !input up_click_5
-# DOWN BUTTON MULTI-CLICK
               - conditions: "{{ button == 'down' }}"
                 sequence:
                   - choose:
@@ -394,8 +382,6 @@ action:
                         sequence: !input down_click_4
                       - conditions: "{{ new_count == 5 }}"
                         sequence: !input down_click_5
-
-              # OFF BUTTON MULTI-CLICK
               - conditions: "{{ button == 'off' }}"
                 sequence:
                   - choose:
@@ -409,11 +395,3 @@ action:
                         sequence: !input off_click_4
                       - conditions: "{{ new_count == 5 }}"
                         sequence: !input off_click_5
-
-  # FINAL SAFETY: Reset helper if no action was taken or to clean up state
-  - action: input_text.set_value
-    target:
-      entity_id: !input helper_last_event
-    data:
-      value: >
-        {"count": 0, "last_time": {{ as_timestamp(now()) * 1000 }}, "btn": "none", "cmd": "idle"}
