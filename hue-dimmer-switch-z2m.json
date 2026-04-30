@@ -1,5 +1,5 @@
 blueprint:
-  name: Hue Dimmer Switch Z2M (God Mode) - Full
+  name: Hue Dimmer Switch Z2M
   description: "Advanced logic for Hue Dimmer V2. Supports 5 clicks per button, multiple hold levels, and hybrid click-hold sequences."
   domain: automation
   input:
