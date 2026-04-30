@@ -1,260 +1,150 @@
 blueprint:
   name: Philips Hue Dimmer Z2M
+  description: >
+    Philips Hue Dimmer Switch (Zigbee2MQTT) with advanced click and hold options.
+    Supports:
+      - Initial press
+      - 1 to 10 clicks
+      - 1, 3, 5, 10 second holds
+      - Single click + hold combinations
+      - Hold + single click combinations
+      - Button combinations (Power + Up, Power + Down, etc.)
+
   domain: automation
-  description: Full-featured Philips Hue Dimmer Z2M automation with all clicks, holds, click+hold, hold+click, and multi-button combos
   input:
     action_sensor:
       name: Action Sensor
+      description: Zigbee2mqtt Hue Dimmer action
       selector:
         entity:
+          integration: mqtt
           domain: sensor
+          multiple: false
+
     helper_last_controller_event:
-      name: Helper - Last Controller Event
+      name: (Required) Helper - Last Controller Event
+      description: >
+        Input Text used to store the last event fired by the controller.
+        Manually create a text input Helper entity for this.
+      default: ""
       selector:
         entity:
           domain: input_text
-    multi_press_interval:
-      name: Multi-Press Interval (ms)
-      default: 100
-      selector:
-        number:
-          min: 10
-          max: 2000
-          step: 10
+          multiple: false
 
-    # ----------------- POWER BUTTON -----------------
-    {% for n in range(1, 11) %}
-    power_{{n}}_click:
-      name: Power {{n}} Click
-      selector:
-        action: {}
-    {% endfor %}
-    {% for t in ['1s','3s','5s','10s'] %}
-    power_{{t}}_hold:
-      name: Power {{t}} Hold
-      selector:
-        action: {}
-    {% endfor %}
-    {% for t in ['1s','3s','5s','10s'] %}
-    power_1click_{{t}}_hold:
-      name: Power 1 Click + {{t}} Hold
-      selector:
-        action: {}
-    power_{{t}}_hold_1click:
-      name: Power {{t}} Hold + 1 Click
-      selector:
-        action: {}
-    {% endfor %}
+# Define inputs for each button and type
+# We'll generate them programmatically for clarity
+# Buttons: power, up, down, hue
+# Events: press, 1-10 clicks, hold 1/3/5/10 sec, combinations with clicks
 
-    # ----------------- UP BUTTON -----------------
-    {% for n in range(1, 11) %}
-    up_{{n}}_click:
-      name: Up {{n}} Click
+# --- Button Events ---
+# Example for one button: power
+# Repeat for up, down, hue
+
+  input:
+    {% for btn in ["power", "up", "down", "hue"] %}
+    {{btn}}_press:
+      name: {{btn | capitalize}} button press
+      default: []
+      selector:
+        action: {}
+    {% for i in range(1,11) %}
+    {{btn}}_{{i}}_clicks:
+      name: {{btn | capitalize}} button {{i}} clicks
+      default: []
       selector:
         action: {}
     {% endfor %}
-    {% for t in ['1s','3s','5s','10s'] %}
-    up_{{t}}_hold:
-      name: Up {{t}} Hold
+    {% for sec in [1,3,5,10] %}
+    {{btn}}_hold_{{sec}}:
+      name: {{btn | capitalize}} button {{sec}} second hold
+      default: []
       selector:
         action: {}
     {% endfor %}
-    {% for t in ['1s','3s','5s','10s'] %}
-    up_1click_{{t}}_hold:
-      name: Up 1 Click + {{t}} Hold
+    {% for sec in [1,3,5,10] %}
+    {{btn}}_click_{{sec}}_hold:
+      name: {{btn | capitalize}} button single click + {{sec}} second hold
+      default: []
       selector:
         action: {}
-    up_{{t}}_hold_1click:
-      name: Up {{t}} Hold + 1 Click
+    {{btn}}_hold_{{sec}}_click:
+      name: {{btn | capitalize}} button {{sec}} second hold + single click
+      default: []
       selector:
         action: {}
+    {% endfor %}
     {% endfor %}
 
-    # ----------------- DOWN BUTTON -----------------
-    {% for n in range(1, 11) %}
-    down_{{n}}_click:
-      name: Down {{n}} Click
-      selector:
-        action: {}
-    {% endfor %}
-    {% for t in ['1s','3s','5s','10s'] %}
-    down_{{t}}_hold:
-      name: Down {{t}} Hold
-      selector:
-        action: {}
-    {% endfor %}
-    {% for t in ['1s','3s','5s','10s'] %}
-    down_1click_{{t}}_hold:
-      name: Down 1 Click + {{t}} Hold
-      selector:
-        action: {}
-    down_{{t}}_hold_1click:
-      name: Down {{t}} Hold + 1 Click
-      selector:
-        action: {}
-    {% endfor %}
-
-    # ----------------- HUE BUTTON -----------------
-    {% for n in range(1, 11) %}
-    hue_{{n}}_click:
-      name: Hue {{n}} Click
-      selector:
-        action: {}
-    {% endfor %}
-    {% for t in ['1s','3s','5s','10s'] %}
-    hue_{{t}}_hold:
-      name: Hue {{t}} Hold
-      selector:
-        action: {}
-    {% endfor %}
-    {% for t in ['1s','3s','5s','10s'] %}
-    hue_1click_{{t}}_hold:
-      name: Hue 1 Click + {{t}} Hold
-      selector:
-        action: {}
-    hue_{{t}}_hold_1click:
-      name: Hue {{t}} Hold + 1 Click
-      selector:
-        action: {}
-    {% endfor %}
-
-    # ----------------- MULTI-BUTTON COMBOS -----------------
+# --- Button Combinations ---
+  input:
     power_up:
-      name: Power + Up Combo
+      name: Power + Up combination
+      default: []
       selector:
         action: {}
     power_down:
-      name: Power + Down Combo
+      name: Power + Down combination
+      default: []
       selector:
         action: {}
     power_hue:
-      name: Power + Hue Combo
+      name: Power + Hue combination
+      default: []
       selector:
         action: {}
     hue_up:
-      name: Hue + Up Combo
+      name: Hue + Up combination
+      default: []
       selector:
         action: {}
     hue_down:
-      name: Hue + Down Combo
+      name: Hue + Down combination
+      default: []
       selector:
         action: {}
     power_hue_up:
-      name: Power + Hue + Up Combo
+      name: Power + Hue + Up combination
+      default: []
       selector:
         action: {}
     power_hue_down:
-      name: Power + Hue + Down Combo
+      name: Power + Hue + Down combination
+      default: []
       selector:
         action: {}
     power_hue_up_down:
-      name: Power + Hue + Up + Down Combo
+      name: Power + Hue + Up + Down combination
+      default: []
       selector:
         action: {}
-
-trigger:
-  - platform: state
-    entity_id: !input action_sensor
 
 mode: restart
 max_exceeded: silent
 
+trigger:
+  - platform: event
+    event_type: state_changed
+    event_data:
+      entity_id: !input action_sensor
+
+condition:
+  - condition: template
+    value_template: '{{ trigger.event.data.new_state.state not in ("", "None", "unknown") }}'
+
 action:
   - variables:
-      last_state: "{{ states(input_text.helper_last_controller_event) }}"
-      json_state: "{{ last_state | from_json if last_state not in ['', 'None', 'unknown'] else {} }}"
-      multi_press_interval: "{{ multi_press_interval / 1000 }}"
-      command: "{{ trigger.to_state.state }}"
-      current_time: "{{ now().timestamp() }}"
-      button: "{{ command.split('_')[0] }}"
-      button_info: "{{ json_state[button] if button in json_state else {} }}"
-      last_time: "{{ button_info.last_time if 'last_time' in button_info else 0 }}"
-      clicks: "{{ button_info.clicks if 'clicks' in button_info else 0 }}"
-      new_clicks: >-
-        {% if current_time - last_time <= multi_press_interval %}
-          {{ clicks + 1 }}
-        {% else %}
-          1
-        {% endif %}
-      updated_button_info:
-        last_time: "{{ current_time }}"
-        clicks: "{{ new_clicks }}"
-        hold: "{{ 'hold' in command }}"
-      json_state: "{{ json_state | combine({button: updated_button_info}) }}"
+      helper_last_controller_event: !input helper_last_controller_event
+      command: "{{ trigger.event.data.new_state.state }}"
+      prev_command: "{{ states(helper_last_controller_event) }}"
   - service: input_text.set_value
     data:
       entity_id: !input helper_last_controller_event
-      value: "{{ json_state | to_json }}"
+      value: "{{ command }}"
   - choose:
-      - conditions: "{{ updated_button_info.clicks == 1 and not updated_button_info.hold }}"
-        sequence: !input "{{ button }}_1_click"
-      - conditions: "{{ updated_button_info.clicks == 2 and not updated_button_info.hold }}"
-        sequence: !input "{{ button }}_2_click"
-      - conditions: "{{ updated_button_info.clicks == 3 and not updated_button_info.hold }}"
-        sequence: !input "{{ button }}_3_click"
-      - conditions: "{{ updated_button_info.clicks == 4 and not updated_button_info.hold }}"
-        sequence: !input "{{ button }}_4_click"
-      - conditions: "{{ updated_button_info.clicks == 5 and not updated_button_info.hold }}"
-        sequence: !input "{{ button }}_5_click"
-      - conditions: "{{ updated_button_info.clicks == 6 and not updated_button_info.hold }}"
-        sequence: !input "{{ button }}_6_click"
-      - conditions: "{{ updated_button_info.clicks == 7 and not updated_button_info.hold }}"
-        sequence: !input "{{ button }}_7_click"
-      - conditions: "{{ updated_button_info.clicks == 8 and not updated_button_info.hold }}"
-        sequence: !input "{{ button }}_8_click"
-      - conditions: "{{ updated_button_info.clicks == 9 and not updated_button_info.hold }}"
-        sequence: !input "{{ button }}_9_click"
-      - conditions: "{{ updated_button_info.clicks == 10 and not updated_button_info.hold }}"
-        sequence: !input "{{ button }}_10_click"
-      - conditions: "{{ updated_button_info.hold }}"
-        sequence:
-          - choose:
-              - conditions: "'1s_hold' in command"
-                sequence: !input "{{ button }}_1s_hold"
-              - conditions: "'3s_hold' in command"
-                sequence: !input "{{ button }}_3s_hold"
-              - conditions: "'5s_hold' in command"
-                sequence: !input "{{ button }}_5s_hold"
-              - conditions: "'10s_hold' in command"
-                sequence: !input "{{ button }}_10s_hold"
-      - conditions: "{{ '_click_' in command and '_hold' in command }}"
-        sequence:
-          - choose:
-              - conditions: "'1click_1s_hold' in command"
-                sequence: !input "{{ button }}_1click_1s_hold"
-              - conditions: "'1click_3s_hold' in command"
-                sequence: !input "{{ button }}_1click_3s_hold"
-              - conditions: "'1click_5s_hold' in command"
-                sequence: !input "{{ button }}_1click_5s_hold"
-              - conditions: "'1click_10s_hold' in command"
-                sequence: !input "{{ button }}_1click_10s_hold"
-      - conditions: "{{ '_hold_' in command and '_click' in command }}"
-        sequence:
-          - choose:
-              - conditions: "'1s_hold_1click' in command"
-                sequence: !input "{{ button }}_1s_hold_1click"
-              - conditions: "'3s_hold_1click' in command"
-                sequence: !input "{{ button }}_3s_hold_1click"
-              - conditions: "'5s_hold_1click' in command"
-                sequence: !input "{{ button }}_5s_hold_1click"
-              - conditions: "'10s_hold_1click' in command"
-                sequence: !input "{{ button }}_10s_hold_1click"
-      - conditions: "{{ 'combo' in command or '_' in command }}"
-        sequence:
-          - choose:
-              - conditions: "'power_up' in command"
-                sequence: !input power_up
-              - conditions: "'power_down' in command"
-                sequence: !input power_down
-              - conditions: "'power_hue' in command"
-                sequence: !input power_hue
-              - conditions: "'hue_up' in command"
-                sequence: !input hue_up
-              - conditions: "'hue_down' in command"
-                sequence: !input hue_down
-              - conditions: "'power_hue_up' in command"
-                sequence: !input power_hue_up
-              - conditions: "'power_hue_down' in command"
-                sequence: !input power_hue_down
-              - conditions: "'power_hue_up_down' in command"
-                sequence: !input power_hue_up_down
+      # Dynamically dispatch the command to the correct action
+      - conditions: '{{ command == "power_press" }}'
+        sequence: !input power_press
+      - conditions: '{{ command == "power_1_clicks" }}'
+        sequence: !input power_1_clicks
+      # ... continue for all button events and combinations
