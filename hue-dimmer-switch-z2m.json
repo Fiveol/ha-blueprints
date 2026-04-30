@@ -1,24 +1,105 @@
 blueprint:
-  name: Hue Dimmer Switch Z2M
+  name: Hue Dimmer Switch Z2M (Ultimate Logic)
+  description: "Advanced logic for Hue Dimmer V2 via Z2M. Supports 1-10 clicks, 1s/5s/10s holds, click-hold, and hold-click. Requires a Text Helper."
   domain: automation
   input:
-    switch_sensor:
-      name: Switch Sensor
+    action_sensor:
+      name: Action Sensor
       selector:
         entity:
           domain: sensor
     helper_last_event:
-      name: Input Text Helper
+      name: Text Helper
       selector:
         entity:
           domain: input_text
+    single_click:
+      name: Single Click
+      default: []
+      selector:
+        action: {}
+    double_click:
+      name: Double Click
+      default: []
+      selector:
+        action: {}
+    triple_click:
+      name: Triple Click
+      default: []
+      selector:
+        action: {}
+    quad_click:
+      name: Quadruple Click
+      default: []
+      selector:
+        action: {}
+    quint_click:
+      name: Quintuple Click
+      default: []
+      selector:
+        action: {}
+    six_click:
+      name: Sextuple Click
+      default: []
+      selector:
+        action: {}
+    seven_click:
+      name: Septuple Click
+      default: []
+      selector:
+        action: {}
+    eight_click:
+      name: Octuple Click
+      default: []
+      selector:
+        action: {}
+    nine_click:
+      name: Nonuple Click
+      default: []
+      selector:
+        action: {}
+    ten_click:
+      name: Decuple Click
+      default: []
+      selector:
+        action: {}
+    hold_1s:
+      name: 1 Second Hold
+      default: []
+      selector:
+        action: {}
+    hold_5s:
+      name: 5 Second Hold
+      default: []
+      selector:
+        action: {}
+    hold_10s:
+      name: 10 Second Hold
+      default: []
+      selector:
+        action: {}
+    click_then_hold:
+      name: Click then Hold
+      default: []
+      selector:
+        action: {}
+    hold_then_click:
+      name: Hold then Click
+      default: []
+      selector:
+        action: {}
+    initial_press:
+      name: Initial Press (Immediate)
+      default: []
+      selector:
+        action: {}
 
 mode: restart
 max_exceeded: silent
 
 trigger:
   - platform: state
-    entity_id: !input switch_sensor
+    entity_id: !input action_sensor
 
 condition:
   - condition: template
@@ -47,61 +128,60 @@ action:
         {"count": {{ new_count }}, "last_time": {{ now_ms }}, "cmd": "{{ command }}"}
 
   - choose:
+      - conditions: "{{ command.endswith('_press') }}"
+        sequence: !input initial_press
+
+  - choose:
       - conditions:
           - condition: template
             value_template: "{{ command.endswith('_hold') }}"
         sequence:
+          - choose:
+              - conditions: "{{ is_rapid and json_data.cmd.endswith('_press') }}"
+                sequence: !input click_then_hold
           - wait_for_trigger:
               - platform: state
-                entity_id: !input switch_sensor
+                entity_id: !input action_sensor
                 state: "{{ command }}_release"
             timeout: "00:00:11"
           - variables:
               duration: "{{ (as_timestamp(now()) - as_timestamp(trigger.to_state.last_changed)) | int }}"
           - choose:
               - conditions: "{{ duration >= 10 }}"
-                sequence: []
+                sequence: !input hold_10s
               - conditions: "{{ duration >= 5 }}"
-                sequence: []
+                sequence: !input hold_5s
               - conditions: "{{ duration >= 1 }}"
-                sequence: []
-
+                sequence: !input hold_1s
       - conditions:
           - condition: template
             value_template: "{{ command.endswith('_press') }}"
         sequence:
+          - choose:
+              - conditions: "{{ is_rapid and json_data.cmd.endswith('_hold') }}"
+                sequence: !input hold_then_click
           - delay:
               milliseconds: 100
           - condition: template
             value_template: "{{ (as_timestamp(now()) * 1000 - now_ms) >= 100 }}"
           - choose:
               - conditions: "{{ new_count == 1 }}"
-                sequence: []
+                sequence: !input single_click
               - conditions: "{{ new_count == 2 }}"
-                sequence: []
+                sequence: !input double_click
               - conditions: "{{ new_count == 3 }}"
-                sequence: []
+                sequence: !input triple_click
               - conditions: "{{ new_count == 4 }}"
-                sequence: []
+                sequence: !input quad_click
               - conditions: "{{ new_count == 5 }}"
-                sequence: []
+                sequence: !input quint_click
               - conditions: "{{ new_count == 6 }}"
-                sequence: []
+                sequence: !input six_click
               - conditions: "{{ new_count == 7 }}"
-                sequence: []
+                sequence: !input seven_click
               - conditions: "{{ new_count == 8 }}"
-                sequence: []
+                sequence: !input eight_click
               - conditions: "{{ new_count == 9 }}"
-                sequence: []
+                sequence: !input nine_click
               - conditions: "{{ new_count == 10 }}"
-                sequence: []
-
-      - conditions:
-          - condition: template
-            value_template: "{{ is_rapid and command.endswith('_hold') and json_data.cmd.endswith('_press') }}"
-        sequence: []
-
-      - conditions:
-          - condition: template
-            value_template: "{{ is_rapid and command.endswith('_press') and json_data.cmd.endswith('_hold') }}"
-        sequence: []
+                sequence: !input ten_click
