@@ -1,397 +1,386 @@
 blueprint:
-  name: Hue Dimmer Switch Z2M
-  description: "Advanced logic for Hue Dimmer V2. Supports 5 clicks per button, multiple hold levels, and hybrid click-hold sequences."
+  name: Philips Hue Dimmer Z2M - Full Automation with Multi-Press Interval
   domain: automation
+  description: Full-featured Philips Hue Dimmer Z2M automation with click, hold, click+hold, hold+click, multi-button combos, and configurable multi-press interval
   input:
     action_sensor:
       name: Action Sensor
       selector:
         entity:
+          integration: mqtt
           domain: sensor
-    helper_last_event:
-      name: Text Helper (Input Text)
+    helper_last_controller_event:
+      name: Helper - Last Controller Event
       selector:
         entity:
           domain: input_text
-    click_delay:
-      name: Multi-click Delay
-      default: 350
+    multi_press_interval:
+      name: Multi-Press Interval (ms)
+      default: 100
       selector:
         number:
-          min: 150
+          min: 10
           max: 1000
           unit_of_measurement: ms
-
-    # --- ACTIONS: ON ---
-    on_initial_press:
-      name: ON - Initial Press
-      default: []
-      selector: { action: {} }
-    on_click_1:
-      name: ON - Click 1
-      default: []
-      selector: { action: {} }
-    on_click_2:
-      name: ON - Click 2
-      default: []
-      selector: { action: {} }
-    on_click_3:
-      name: ON - Click 3
-      default: []
-      selector: { action: {} }
-    on_click_4:
-      name: ON - Click 4
-      default: []
-      selector: { action: {} }
-    on_click_5:
-      name: ON - Click 5
-      default: []
-      selector: { action: {} }
-    on_hold_1s:
-      name: ON - Hold 1s
-      default: []
-      selector: { action: {} }
-    on_hold_5s:
-      name: ON - Hold 5s
-      default: []
-      selector: { action: {} }
-    on_hold_10s:
-      name: ON - Hold 10s
-      default: []
-      selector: { action: {} }
-    on_click_hold_1s:
-      name: ON - Click then Hold
-      default: []
-      selector: { action: {} }
-    on_hold_1s_click:
-      name: ON - Hold then Click
-      default: []
-      selector: { action: {} }
-
-    # --- ACTIONS: UP ---
-    up_initial_press:
-      name: UP - Initial Press
-      default: []
-      selector: { action: {} }
-    up_click_1:
-      name: UP - Click 1
-      default: []
-      selector: { action: {} }
-    up_click_2:
-      name: UP - Click 2
-      default: []
-      selector: { action: {} }
-    up_click_3:
-      name: UP - Click 3
-      default: []
-      selector: { action: {} }
-    up_click_4:
-      name: UP - Click 4
-      default: []
-      selector: { action: {} }
-    up_click_5:
-      name: UP - Click 5
-      default: []
-      selector: { action: {} }
-    up_hold_1s:
-      name: UP - Hold 1s
-      default: []
-      selector: { action: {} }
-    up_hold_5s:
-      name: UP - Hold 5s
-      default: []
-      selector: { action: {} }
-    up_hold_10s:
-      name: UP - Hold 10s
-      default: []
-      selector: { action: {} }
-    up_click_hold_1s:
-      name: UP - Click then Hold
-      default: []
-      selector: { action: {} }
-    up_hold_1s_click:
-      name: UP - Hold then Click
-      default: []
-      selector: { action: {} }
-
-    # --- ACTIONS: DOWN ---
-    down_initial_press:
-      name: DOWN - Initial Press
-      default: []
-      selector: { action: {} }
-    down_click_1:
-      name: DOWN - Click 1
-      default: []
-      selector: { action: {} }
-    down_click_2:
-      name: DOWN - Click 2
-      default: []
-      selector: { action: {} }
-    down_click_3:
-      name: DOWN - Click 3
-      default: []
-      selector: { action: {} }
-    down_click_4:
-      name: DOWN - Click 4
-      default: []
-      selector: { action: {} }
-    down_click_5:
-      name: DOWN - Click 5
-      default: []
-      selector: { action: {} }
-    down_hold_1s:
-      name: DOWN - Hold 1s
-      default: []
-      selector: { action: {} }
-    down_hold_5s:
-      name: DOWN - Hold 5s
-      default: []
-      selector: { action: {} }
-    down_hold_10s:
-      name: DOWN - Hold 10s
-      default: []
-      selector: { action: {} }
-    down_click_hold_1s:
-      name: DOWN - Click then Hold
-      default: []
-      selector: { action: {} }
-    down_hold_1s_click:
-      name: DOWN - Hold then Click
-      default: []
-      selector: { action: {} }
-
-    # --- ACTIONS: OFF ---
-    off_initial_press:
-      name: OFF - Initial Press
-      default: []
-      selector: { action: {} }
-    off_click_1:
-      name: OFF - Click 1
-      default: []
-      selector: { action: {} }
-    off_click_2:
-      name: OFF - Click 2
-      default: []
-      selector: { action: {} }
-    off_click_3:
-      name: OFF - Click 3
-      default: []
-      selector: { action: {} }
-    off_click_4:
-      name: OFF - Click 4
-      default: []
-      selector: { action: {} }
-    off_click_5:
-      name: OFF - Click 5
-      default: []
-      selector: { action: {} }
-    off_hold_1s:
-      name: OFF - Hold 1s
-      default: []
-      selector: { action: {} }
-    off_hold_5s:
-      name: OFF - Hold 5s
-      default: []
-      selector: { action: {} }
-    off_hold_10s:
-      name: OFF - Hold 10s
-      default: []
-      selector: { action: {} }
-    off_click_hold_1s:
-      name: OFF - Click then Hold
-      default: []
-      selector: { action: {} }
-    off_hold_1s_click:
-      name: OFF - Hold then Click
-      default: []
-      selector: { action: {} }
-
-mode: restart
-max_exceeded: silent
-
+    power_1_click: { action: {} }
+    power_2_click: { action: {} }
+    power_3_click: { action: {} }
+    power_4_click: { action: {} }
+    power_5_click: { action: {} }
+    power_6_click: { action: {} }
+    power_7_click: { action: {} }
+    power_8_click: { action: {} }
+    power_9_click: { action: {} }
+    power_10_click: { action: {} }
+    power_1s_hold: { action: {} }
+    power_3s_hold: { action: {} }
+    power_5s_hold: { action: {} }
+    power_10s_hold: { action: {} }
+    power_1click_1s_hold: { action: {} }
+    power_1click_3s_hold: { action: {} }
+    power_1click_5s_hold: { action: {} }
+    power_1click_10s_hold: { action: {} }
+    power_1s_hold_1click: { action: {} }
+    power_3s_hold_1click: { action: {} }
+    power_5s_hold_1click: { action: {} }
+    power_10s_hold_1click: { action: {} }
+    up_1_click: { action: {} }
+    up_2_click: { action: {} }
+    up_3_click: { action: {} }
+    up_4_click: { action: {} }
+    up_5_click: { action: {} }
+    up_6_click: { action: {} }
+    up_7_click: { action: {} }
+    up_8_click: { action: {} }
+    up_9_click: { action: {} }
+    up_10_click: { action: {} }
+    up_1s_hold: { action: {} }
+    up_3s_hold: { action: {} }
+    up_5s_hold: { action: {} }
+    up_10s_hold: { action: {} }
+    up_1click_1s_hold: { action: {} }
+    up_1click_3s_hold: { action: {} }
+    up_1click_5s_hold: { action: {} }
+    up_1click_10s_hold: { action: {} }
+    up_1s_hold_1click: { action: {} }
+    up_3s_hold_1click: { action: {} }
+    up_5s_hold_1click: { action: {} }
+    up_10s_hold_1click: { action: {} }
+    down_1_click: { action: {} }
+    down_2_click: { action: {} }
+    down_3_click: { action: {} }
+    down_4_click: { action: {} }
+    down_5_click: { action: {} }
+    down_6_click: { action: {} }
+    down_7_click: { action: {} }
+    down_8_click: { action: {} }
+    down_9_click: { action: {} }
+    down_10_click: { action: {} }
+    down_1s_hold: { action: {} }
+    down_3s_hold: { action: {} }
+    down_5s_hold: { action: {} }
+    down_10s_hold: { action: {} }
+    down_1click_1s_hold: { action: {} }
+    down_1click_3s_hold: { action: {} }
+    down_1click_5s_hold: { action: {} }
+    down_1click_10s_hold: { action: {} }
+    down_1s_hold_1click: { action: {} }
+    down_3s_hold_1click: { action: {} }
+    down_5s_hold_1click: { action: {} }
+    down_10s_hold_1click: { action: {} }
+    hue_1_click: { action: {} }
+    hue_2_click: { action: {} }
+    hue_3_click: { action: {} }
+    hue_4_click: { action: {} }
+    hue_5_click: { action: {} }
+    hue_6_click: { action: {} }
+    hue_7_click: { action: {} }
+    hue_8_click: { action: {} }
+    hue_9_click: { action: {} }
+    hue_10_click: { action: {} }
+    hue_1s_hold: { action: {} }
+    hue_3s_hold: { action: {} }
+    hue_5s_hold: { action: {} }
+    hue_10s_hold: { action: {} }
+    hue_1click_1s_hold: { action: {} }
+    hue_1click_3s_hold: { action: {} }
+    hue_1click_5s_hold: { action: {} }
+    hue_1click_10s_hold: { action: {} }
+    hue_1s_hold_1click: { action: {} }
+    hue_3s_hold_1click: { action: {} }
+    hue_5s_hold_1click: { action: {} }
+    hue_10s_hold_1click: { action: {} }
+    power_up: { action: {} }
+    power_down: { action: {} }
+    power_hue: { action: {} }
+    hue_up: { action: {} }
+    hue_down: { action: {} }
+    power_hue_up: { action: {} }
+    power_hue_down: { action: {} }
+    power_hue_up_down: { action: {} }
+    multi_press_interval:
+      name: Multi Press Interval (ms)
+      default: 100
+      selector:
+        number:
+          min: 10
+          max: 2000
+          step: 10
 trigger:
-  - platform: state
-    entity_id: !input action_sensor
+  - platform: event
+    event_type: state_changed
+    event_data:
+      entity_id: !input action_sensor
 
 condition:
   - condition: template
-    value_template: "{{ trigger.to_state.state not in ['', 'None', 'unknown', 'unavailable'] }}"
-
-action:
+    value_template: '{{ trigger.event.data.new_state.state not in ("", "None", "unknown") }}'
+  - choose:
+      - conditions: "{{ button_key != 'unknown' }}"
+        sequence:
+          - variables:
+              last_click_down: "{{ json_state['down']['last_time'] if 'down' in json_state else 0 }}"
+              click_count_down: >
+                {% set elapsed = (now_ts - last_click_down) * 1000 %}
+                {% if elapsed <= multi_press_interval %}{{ (json_state['down']['clicks'] | default(0)) + 1 }}
+                {% else %}1{% endif %}
+              updated_state_down: >
+                {% set s = json_state.copy() %}
+                {% set _ = s.update({'down': {'last_time': now_ts, 'clicks': click_count_down}}) %}
+                {{ s }}
+          - service: input_text.set_value
+            data:
+              entity_id: !input helper_last_controller_event
+              value: "{{ updated_state_down | to_json }}"
+          - variables:
+              last_click_off: "{{ json_state['off']['last_time'] if 'off' in json_state else 0 }}"
+              click_count_off: >
+                {% set elapsed = (now_ts - last_click_off) * 1000 %}
+                {% if elapsed <= multi_press_interval %}{{ (json_state['off']['clicks'] | default(0)) + 1 }}
+                {% else %}1{% endif %}
+              updated_state_off: >
+                {% set s = json_state.copy() %}
+                {% set _ = s.update({'off': {'last_time': now_ts, 'clicks': click_count_off}}) %}
+                {{ s }}
+          - service: input_text.set_value
+            data:
+              entity_id: !input helper_last_controller_event
+              value: "{{ updated_state_off | to_json }}"
+  - choose:
+      - conditions: "{{ 'on' in json_state }}"
+        sequence:
+          - variables:
+              clicks: "{{ json_state['on']['clicks'] | default(1) }}"
+          - choose:
+              - conditions: "{{ clicks == 1 }}"
+                sequence: !input on_press
+              - conditions: "{{ clicks == 2 }}"
+                sequence: !input on_press_double
+              - conditions: "{{ clicks == 3 }}"
+                sequence: !input on_press_triple
+              - conditions: "{{ clicks == 4 }}"
+                sequence: !input on_press_quad
+              - conditions: "{{ clicks == 5 }}"
+                sequence: !input on_press_quint
+              - conditions: "{{ clicks == 6 }}"
+                sequence: !input on_press_sext
+              - conditions: "{{ clicks == 7 }}"
+                sequence: !input on_press_sept
+              - conditions: "{{ clicks == 8 }}"
+                sequence: !input on_press_oct
+              - conditions: "{{ clicks == 9 }}"
+                sequence: !input on_press_non
+              - conditions: "{{ clicks == 10 }}"
+                sequence: !input on_press_dec
+      - conditions: "{{ 'up' in json_state }}"
+        sequence:
+          - variables:
+              clicks: "{{ json_state['up']['clicks'] | default(1) }}"
+          - choose:
+              - conditions: "{{ clicks == 1 }}"
+                sequence: !input up_press
+              - conditions: "{{ clicks == 2 }}"
+                sequence: !input up_press_double
+              - conditions: "{{ clicks == 3 }}"
+                sequence: !input up_press_triple
+              - conditions: "{{ clicks == 4 }}"
+                sequence: !input up_press_quad
+              - conditions: "{{ clicks == 5 }}"
+                sequence: !input up_press_quint
+              - conditions: "{{ clicks == 6 }}"
+                sequence: !input up_press_sext
+              - conditions: "{{ clicks == 7 }}"
+                sequence: !input up_press_sept
+              - conditions: "{{ clicks == 8 }}"
+                sequence: !input up_press_oct
+              - conditions: "{{ clicks == 9 }}"
+                sequence: !input up_press_non
+              - conditions: "{{ clicks == 10 }}"
+                sequence: !input up_press_dec
+      - conditions: "{{ 'down' in json_state }}"
+        sequence:
+          - variables:
+              clicks: "{{ json_state['down']['clicks'] | default(1) }}"
+          - choose:
+              - conditions: "{{ clicks == 1 }}"
+                sequence: !input down_press
+              - conditions: "{{ clicks == 2 }}"
+                sequence: !input down_press_double
+              - conditions: "{{ clicks == 3 }}"
+                sequence: !input down_press_triple
+              - conditions: "{{ clicks == 4 }}"
+                sequence: !input down_press_quad
+              - conditions: "{{ clicks == 5 }}"
+                sequence: !input down_press_quint
+              - conditions: "{{ clicks == 6 }}"
+                sequence: !input down_press_sext
+              - conditions: "{{ clicks == 7 }}"
+                sequence: !input down_press_sept
+              - conditions: "{{ clicks == 8 }}"
+                sequence: !input down_press_oct
+              - conditions: "{{ clicks == 9 }}"
+                sequence: !input down_press_non
+              - conditions: "{{ clicks == 10 }}"
+                sequence: !input down_press_dec
+      - conditions: "{{ 'off' in json_state }}"
+        sequence:
+          - variables:
+              clicks: "{{ json_state['off']['clicks'] | default(1) }}"
+          - choose:
+              - conditions: "{{ clicks == 1 }}"
+                sequence: !input off_press
+              - conditions: "{{ clicks == 2 }}"
+                sequence: !input off_press_double
+              - conditions: "{{ clicks == 3 }}"
+                sequence: !input off_press_triple
+              - conditions: "{{ clicks == 4 }}"
+                sequence: !input off_press_quad
+              - conditions: "{{ clicks == 5 }}"
+                sequence: !input off_press_quint
+              - conditions: "{{ clicks == 6 }}"
+                sequence: !input off_press_sext
+              - conditions: "{{ clicks == 7 }}"
+                sequence: !input off_press_sept
+              - conditions: "{{ clicks == 8 }}"
+                sequence: !input off_press_oct
+              - conditions: "{{ clicks == 9 }}"
+                sequence: !input off_press_non
+              - conditions: "{{ clicks == 10 }}"
+                sequence: !input off_press_dec
+  - choose:
+      - conditions: "{{ command.endswith('_hold') }}"
+        sequence:
+          - variables:
+              hold_time: "{{ command.split('_hold')[0] | int(default=1) }}"
+          - choose:
+              - conditions: "{{ hold_time == 1 }}"
+                sequence: !input hold_1s
+              - conditions: "{{ hold_time == 3 }}"
+                sequence: !input hold_3s
+              - conditions: "{{ hold_time == 5 }}"
+                sequence: !input hold_5s
+              - conditions: "{{ hold_time == 10 }}"
+                sequence: !input hold_10s
+  - choose:
+      - conditions: "{{ '_click_' in command and '_hold' in command }}"
+        sequence:
+          - variables:
+              parts: "{{ command.split('_click_') }}"
+              click_count: "{{ parts[0] | int }}"
+              hold_time: "{{ parts[1].split('_hold')[0] | int }}"
+          - choose:
+              - conditions: "{{ click_count == 1 and hold_time == 1 }}"
+                sequence: !input click1_hold1s
+              - conditions: "{{ click_count == 1 and hold_time == 3 }}"
+                sequence: !input click1_hold3s
+              - conditions: "{{ click_count == 1 and hold_time == 5 }}"
+                sequence: !input click1_hold5s
+              - conditions: "{{ click_count == 1 and hold_time == 10 }}"
+                sequence: !input click1_hold10s
+              - conditions: "{{ click_count == 2 and hold_time == 1 }}"
+                sequence: !input click2_hold1s
+              - conditions: "{{ click_count == 2 and hold_time == 3 }}"
+                sequence: !input click2_hold3s
+              - conditions: "{{ click_count == 2 and hold_time == 5 }}"
+                sequence: !input click2_hold5s
+              - conditions: "{{ click_count == 2 and hold_time == 10 }}"
+                sequence: !input click2_hold10s
+  - choose:
+      - conditions: "{{ '_hold_' in command and '_click' in command }}"
+        sequence:
+          - variables:
+              parts: "{{ command.split('_hold_') }}"
+              hold_time: "{{ parts[0] | int }}"
+              click_count: "{{ parts[1].split('_click')[0] | int }}"
+          - choose:
+              - conditions: "{{ hold_time == 1 and click_count == 1 }}"
+                sequence: !input hold1s_click1
+              - conditions: "{{ hold_time == 1 and click_count == 2 }}"
+                sequence: !input hold1s_click2
+              - conditions: "{{ hold_time == 3 and click_count == 1 }}"
+                sequence: !input hold3s_click1
+              - conditions: "{{ hold_time == 3 and click_count == 2 }}"
+                sequence: !input hold3s_click2
+              - conditions: "{{ hold_time == 5 and click_count == 1 }}"
+                sequence: !input hold5s_click1
+              - conditions: "{{ hold_time == 5 and click_count == 2 }}"
+                sequence: !input hold5s_click2
+              - conditions: "{{ hold_time == 10 and click_count == 1 }}"
+                sequence: !input hold10s_click1
+              - conditions: "{{ hold_time == 10 and click_count == 2 }}"
+                sequence: !input hold10s_click2
+  - choose:
+      - conditions: "{{ 'combo_' in command }}"
+        sequence:
+          - choose:
+              - conditions: "{{ command == 'combo_power_up' }}"
+                sequence: !input combo_power_up
+              - conditions: "{{ command == 'combo_power_down' }}"
+                sequence: !input combo_power_down
+              - conditions: "{{ command == 'combo_power_hue' }}"
+                sequence: !input combo_power_hue
+              - conditions: "{{ command == 'combo_up_down' }}"
+                sequence: !input combo_up_down
+              - conditions: "{{ command == 'combo_up_hue' }}"
+                sequence: !input combo_up_hue
+              - conditions: "{{ command == 'combo_down_hue' }}"
+                sequence: !input combo_down_hue
   - variables:
-      command: "{{ trigger.to_state.state }}"
+      last_state: "{{ states(helper_last_controller_event) }}"
+      json_state: "{{ last_state | from_json if last_state not in ['', 'None', 'unknown'] else {} }}"
+      multi_press_interval: "{{ multi_press_interval | default(0.1) }}"
+      current_time: "{{ now().timestamp() }}"
+  - variables:
       button: "{{ command.split('_')[0] }}"
-      type: "{{ command.split('_')[1] }}"
-      helper: !input helper_last_event
-      delay_val: !input click_delay
-      raw_data: "{{ states(helper) }}"
-      json_data: >
-        {% if raw_data is defined and '{' in raw_data %}
-          {{ raw_data | from_json }}
-        {% else %}
-          {"count": 0, "last_time": 0, "btn": "none", "cmd": "none"}
-        {% endif %}
-      now_ms: "{{ as_timestamp(now()) * 1000 }}"
-      is_rapid: "{{ (now_ms - json_data.last_time) < (delay_val + 150) }}"
-      is_same_btn: "{{ button == json_data.btn }}"
-      new_count: >
-        {% if type == 'press' and is_rapid and is_same_btn and json_data.cmd == 'press' %}
-          {{ [json_data.count + 1, 5] | min }}
+      button_info: "{{ json_state[button] if button in json_state else {} }}"
+      last_time: "{{ button_info.last_time if 'last_time' in button_info else 0 }}"
+      clicks: "{{ button_info.clicks if 'clicks' in button_info else 0 }}"
+      new_clicks: >-
+        {% if current_time - last_time <= multi_press_interval %}
+          {{ clicks + 1 }}
         {% else %}
           1
         {% endif %}
-
-  - action: input_text.set_value
-    target:
-      entity_id: !input helper_last_event
+      updated_button_info:
+        last_time: "{{ current_time }}"
+        clicks: "{{ new_clicks }}"
+        hold: "{{ 'hold' in command }}"
+  - variables:
+      json_state: "{{ json_state | combine({button: updated_button_info}) }}"
+  - service: input_text.set_value
     data:
-      value: >
-        {"count": {{ new_count }}, "last_time": {{ now_ms }}, "btn": "{{ button }}", "cmd": "{{ type }}"}
-
+      entity_id: !input helper_last_controller_event
+      value: "{{ json_state | to_json }}"
   - choose:
-      - conditions: "{{ type == 'press' }}"
-        sequence:
-          - choose:
-              - conditions: "{{ button == 'on' }}"
-                sequence: !input on_initial_press
-              - conditions: "{{ button == 'up' }}"
-                sequence: !input up_initial_press
-              - conditions: "{{ button == 'down' }}"
-                sequence: !input down_initial_press
-              - conditions: "{{ button == 'off' }}"
-                sequence: !input off_initial_press
-
-  - choose:
-      # --- HOLD LOGIC ---
-      - conditions: "{{ type == 'hold' }}"
-        sequence:
-          - wait_for_trigger:
-              - platform: state
-                entity_id: !input action_sensor
-                state: "{{ button }}_hold_release"
-            timeout: "00:00:11"
-          - variables:
-              hold_dur: "{{ (as_timestamp(now()) * 1000 - now_ms) / 1000 }}"
-          - action: input_text.set_value
-            target:
-              entity_id: !input helper_last_event
-            data:
-              value: '{"count": 0, "last_time": {{ as_timestamp(now()) * 1000 }}, "btn": "{{ button }}", "cmd": "hold_release"}'
-          - choose:
-              - conditions: "{{ is_rapid and is_same_btn and json_data.cmd == 'press' }}"
-                sequence:
-                  - choose:
-                      - conditions: "{{ button == 'on' }}"
-                        sequence: !input on_click_hold_1s
-                      - conditions: "{{ button == 'up' }}"
-                        sequence: !input up_click_hold_1s
-                      - conditions: "{{ button == 'down' }}"
-                        sequence: !input down_click_hold_1s
-                      - conditions: "{{ button == 'off' }}"
-                        sequence: !input off_click_hold_1s
-              - conditions: "{{ hold_dur >= 10 }}"
-                sequence:
-                  - choose:
-                      - conditions: "{{ button == 'on' }}"
-                        sequence: !input on_hold_10s
-                      - conditions: "{{ button == 'up' }}"
-                        sequence: !input up_hold_10s
-                      - conditions: "{{ button == 'down' }}"
-                        sequence: !input down_hold_10s
-                      - conditions: "{{ button == 'off' }}"
-                        sequence: !input off_hold_10s
-              - conditions: "{{ hold_dur >= 5 }}"
-                sequence:
-                  - choose:
-                      - conditions: "{{ button == 'on' }}"
-                        sequence: !input on_hold_5s
-                      - conditions: "{{ button == 'up' }}"
-                        sequence: !input up_hold_5s
-                      - conditions: "{{ button == 'down' }}"
-                        sequence: !input down_hold_5s
-                      - conditions: "{{ button == 'off' }}"
-                        sequence: !input off_hold_5s
-              - conditions: "{{ hold_dur >= 1 }}"
-                sequence:
-                  - choose:
-                      - conditions: "{{ button == 'on' }}"
-                        sequence: !input on_hold_1s
-                      - conditions: "{{ button == 'up' }}"
-                        sequence: !input up_hold_1s
-                      - conditions: "{{ button == 'down' }}"
-                        sequence: !input down_hold_1s
-                      - conditions: "{{ button == 'off' }}"
-                        sequence: !input off_hold_1s
-
-      # --- MULTI-CLICK & SEQUENCES ---
-      - conditions: "{{ type == 'press' }}"
-        sequence:
-          - choose:
-              - conditions: "{{ is_rapid and is_same_btn and json_data.cmd == 'hold_release' }}"
-                sequence:
-                  - choose:
-                      - conditions: "{{ button == 'on' }}"
-                        sequence: !input on_hold_1s_click
-                      - conditions: "{{ button == 'up' }}"
-                        sequence: !input up_hold_1s_click
-                      - conditions: "{{ button == 'down' }}"
-                        sequence: !input down_hold_1s_click
-                      - conditions: "{{ button == 'off' }}"
-                        sequence: !input off_hold_1s_click
-          - delay:
-              milliseconds: "{{ delay_val }}"
-          - condition: template
-            value_template: "{{ (states(helper) | from_json).count == new_count }}"
-          - choose:
-              - conditions: "{{ button == 'on' }}"
-                sequence:
-                  - choose:
-                      - conditions: "{{ new_count == 1 }}"
-                        sequence: !input on_click_1
-                      - conditions: "{{ new_count == 2 }}"
-                        sequence: !input on_click_2
-                      - conditions: "{{ new_count == 3 }}"
-                        sequence: !input on_click_3
-                      - conditions: "{{ new_count == 4 }}"
-                        sequence: !input on_click_4
-                      - conditions: "{{ new_count == 5 }}"
-                        sequence: !input on_click_5
-              - conditions: "{{ button == 'up' }}"
-                sequence:
-                  - choose:
-                      - conditions: "{{ new_count == 1 }}"
-                        sequence: !input up_click_1
-                      - conditions: "{{ new_count == 2 }}"
-                        sequence: !input up_click_2
-                      - conditions: "{{ new_count == 3 }}"
-                        sequence: !input up_click_3
-                      - conditions: "{{ new_count == 4 }}"
-                        sequence: !input up_click_4
-                      - conditions: "{{ new_count == 5 }}"
-                        sequence: !input up_click_5
-              - conditions: "{{ button == 'down' }}"
-                sequence:
-                  - choose:
-                      - conditions: "{{ new_count == 1 }}"
-                        sequence: !input down_click_1
-                      - conditions: "{{ new_count == 2 }}"
-                        sequence: !input down_click_2
-                      - conditions: "{{ new_count == 3 }}"
-                        sequence: !input down_click_3
-                      - conditions: "{{ new_count == 4 }}"
-                        sequence: !input down_click_4
-                      - conditions: "{{ new_count == 5 }}"
-                        sequence: !input down_click_5
-              - conditions: "{{ button == 'off' }}"
-                sequence:
-                  - choose:
-                      - conditions: "{{ new_count == 1 }}"
-                        sequence: !input off_click_1
-                      - conditions: "{{ new_count == 2 }}"
-                        sequence: !input off_click_2
-                      - conditions: "{{ new_count == 3 }}"
-                        sequence: !input off_click_3
-                      - conditions: "{{ new_count == 4 }}"
-                        sequence: !input off_click_4
-                      - conditions: "{{ new_count == 5 }}"
-                        sequence: !input off_click_5
+      - conditions: "{{ updated_button_info.clicks == 1 and not updated_button_info.hold }}"
+        sequence: !input click1
+      - conditions: "{{ updated_button_info.clicks == 2 and not updated_button_info.hold }}"
+        sequence: !input click2
+      - conditions: "{{ updated_button_info.clicks == 3 and not updated_button_info.hold }}"
+        sequence: !input click3
+      - conditions: "{{ updated_button_info.clicks == 4 and not updated_button_info.hold }}"
+        sequence: !input click4
+      - conditions: "{{ updated_button_info.clicks == 5 and not updated_button_info.hold }}"
+        sequence: !input click5
+      - conditions: "{{ updated_button_info.hold and updated_button_info.clicks == 1 }}"
+        sequence: !input hold_once
