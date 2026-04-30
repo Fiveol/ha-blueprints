@@ -1,0 +1,107 @@
+blueprint:
+  name: Hue Dimmer Switch Z2M
+  domain: automation
+  input:
+    switch_sensor:
+      name: Switch Sensor
+      selector:
+        entity:
+          domain: sensor
+    helper_last_event:
+      name: Input Text Helper
+      selector:
+        entity:
+          domain: input_text
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+  - platform: state
+    entity_id: !input switch_sensor
+
+condition:
+  - condition: template
+    value_template: "{{ trigger.to_state.state not in ['', 'None', 'unknown', 'unavailable'] }}"
+
+action:
+  - variables:
+      command: "{{ trigger.to_state.state }}"
+      helper: !input helper_last_event
+      raw_data: "{{ states(helper) }}"
+      json_data: >
+        {% if raw_data|length > 0 and raw_data[0] == '{' %}
+          {{ raw_data | from_json }}
+        {% else %}
+          {"count": 0, "last_time": 0, "cmd": "none"}
+        {% endif %}
+      now_ms: "{{ as_timestamp(now()) * 1000 }}"
+      is_rapid: "{{ (now_ms - json_data.last_time) < 500 }}"
+      new_count: "{{ (json_data.count + 1) if (is_rapid and command == json_data.cmd) else 1 }}"
+
+  - action: input_text.set_value
+    target:
+      entity_id: !input helper_last_event
+    data:
+      value: >
+        {"count": {{ new_count }}, "last_time": {{ now_ms }}, "cmd": "{{ command }}"}
+
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ command.endswith('_hold') }}"
+        sequence:
+          - wait_for_trigger:
+              - platform: state
+                entity_id: !input switch_sensor
+                state: "{{ command }}_release"
+            timeout: "00:00:11"
+          - variables:
+              duration: "{{ (as_timestamp(now()) - as_timestamp(trigger.to_state.last_changed)) | int }}"
+          - choose:
+              - conditions: "{{ duration >= 10 }}"
+                sequence: []
+              - conditions: "{{ duration >= 5 }}"
+                sequence: []
+              - conditions: "{{ duration >= 1 }}"
+                sequence: []
+
+      - conditions:
+          - condition: template
+            value_template: "{{ command.endswith('_press') }}"
+        sequence:
+          - delay:
+              milliseconds: 100
+          - condition: template
+            value_template: "{{ (as_timestamp(now()) * 1000 - now_ms) >= 100 }}"
+          - choose:
+              - conditions: "{{ new_count == 1 }}"
+                sequence: []
+              - conditions: "{{ new_count == 2 }}"
+                sequence: []
+              - conditions: "{{ new_count == 3 }}"
+                sequence: []
+              - conditions: "{{ new_count == 4 }}"
+                sequence: []
+              - conditions: "{{ new_count == 5 }}"
+                sequence: []
+              - conditions: "{{ new_count == 6 }}"
+                sequence: []
+              - conditions: "{{ new_count == 7 }}"
+                sequence: []
+              - conditions: "{{ new_count == 8 }}"
+                sequence: []
+              - conditions: "{{ new_count == 9 }}"
+                sequence: []
+              - conditions: "{{ new_count == 10 }}"
+                sequence: []
+
+      - conditions:
+          - condition: template
+            value_template: "{{ is_rapid and command.endswith('_hold') and json_data.cmd.endswith('_press') }}"
+        sequence: []
+
+      - conditions:
+          - condition: template
+            value_template: "{{ is_rapid and command.endswith('_press') and json_data.cmd.endswith('_hold') }}"
+        sequence: []
