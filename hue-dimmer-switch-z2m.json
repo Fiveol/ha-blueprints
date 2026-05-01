@@ -1,387 +1,105 @@
 blueprint:
-  name: Philips Hue Dimmer Z2M
+  name: Philips Hue Dimmer v2 (Z2M) - Multi-Click Engine
   description: >
-    Advanced Philips Hue Dimmer Switch (Zigbee2MQTT) blueprint with:
-    - Press, 1-10 clicks
-    - 1/3/5/10s holds
-    - Single click + hold
-    - Hold + single click
-    - Button combinations (Power, Up, Down, Hue)
+    Extends the Hue Dimmer V2 to support up to 5 clicks using a Text Helper to track state.
+    Note: Multi-click introduces a small delay (the timeout) before the action executes.
   domain: automation
   input:
     action_sensor:
       name: Action Sensor
-      description: Zigbee2mqtt Hue Dimmer action
       selector:
         entity:
           integration: mqtt
           domain: sensor
-          multiple: false
-    helper_last_controller_event:
-      name: Helper - Last Controller Event
-      description: >
-        Input Text used to store the last event fired by the controller.
-        You will need to manually create a text input Helper entity for this.
+    helper_last_event:
+      name: Text Helper
+      description: Create a Text Helper (input_text) to store click count and timing.
       selector:
         entity:
           domain: input_text
-          multiple: false
+    click_timeout:
+      name: Click Speed
+      description: Max time (milliseconds) between clicks to count as a multi-click.
+      default: 500
+      selector:
+        number:
+          min: 200
+          max: 1000
+          unit_of_measurement: ms
+    # Example Actions for ON button
+    on_single:
+      name: ON - Single Press
+      default: []
+      selector: {action: {}}
+    on_double:
+      name: ON - Double Press
+      default: []
+      selector: {action: {}}
+    on_triple:
+      name: ON - Triple Press
+      default: []
+      selector: {action: {}}
 
-    # --------------------------------
-    # POWER BUTTON
-    # --------------------------------
-    power_press: { name: Power press, default: [], selector: { action: {} } }
-    power_1_click: { name: Power 1 click, default: [], selector: { action: {} } }
-    power_2_click: { name: Power 2 clicks, default: [], selector: { action: {} } }
-    power_3_click: { name: Power 3 clicks, default: [], selector: { action: {} } }
-    power_4_click: { name: Power 4 clicks, default: [], selector: { action: {} } }
-    power_5_click: { name: Power 5 clicks, default: [], selector: { action: {} } }
-    power_6_click: { name: Power 6 clicks, default: [], selector: { action: {} } }
-    power_7_click: { name: Power 7 clicks, default: [], selector: { action: {} } }
-    power_8_click: { name: Power 8 clicks, default: [], selector: { action: {} } }
-    power_9_click: { name: Power 9 clicks, default: [], selector: { action: {} } }
-    power_10_click: { name: Power 10 clicks, default: [], selector: { action: {} } }
-    power_hold_1: { name: Power 1s hold, default: [], selector: { action: {} } }
-    power_hold_3: { name: Power 3s hold, default: [], selector: { action: {} } }
-    power_hold_5: { name: Power 5s hold, default: [], selector: { action: {} } }
-    power_hold_10: { name: Power 10s hold, default: [], selector: { action: {} } }
-    power_1_click_1s_hold: { name: Power 1 click + 1s hold, default: [], selector: { action: {} } }
-    power_1_click_3s_hold: { name: Power 1 click + 3s hold, default: [], selector: { action: {} } }
-    power_1_click_5s_hold: { name: Power 1 click + 5s hold, default: [], selector: { action: {} } }
-    power_1_click_10s_hold: { name: Power 1 click + 10s hold, default: [], selector: { action: {} } }
-    power_1s_hold_1_click: { name: Power 1s hold + 1 click, default: [], selector: { action: {} } }
-    power_3s_hold_1_click: { name: Power 3s hold + 1 click, default: [], selector: { action: {} } }
-    power_5s_hold_1_click: { name: Power 5s hold + 1 click, default: [], selector: { action: {} } }
-    power_10s_hold_1_click: { name: Power 10s hold + 1 click, default: [], selector: { action: {} } }
-    # --------------------------------
-    # UP BUTTON
-    # --------------------------------
-    up_press: { name: Up press, default: [], selector: { action: {} } }
-    up_1_click: { name: Up 1 click, default: [], selector: { action: {} } }
-    up_2_click: { name: Up 2 clicks, default: [], selector: { action: {} } }
-    up_3_click: { name: Up 3 clicks, default: [], selector: { action: {} } }
-    up_4_click: { name: Up 4 clicks, default: [], selector: { action: {} } }
-    up_5_click: { name: Up 5 clicks, default: [], selector: { action: {} } }
-    up_6_click: { name: Up 6 clicks, default: [], selector: { action: {} } }
-    up_7_click: { name: Up 7 clicks, default: [], selector: { action: {} } }
-    up_8_click: { name: Up 8 clicks, default: [], selector: { action: {} } }
-    up_9_click: { name: Up 9 clicks, default: [], selector: { action: {} } }
-    up_10_click: { name: Up 10 clicks, default: [], selector: { action: {} } }
-    up_hold_1: { name: Up 1s hold, default: [], selector: { action: {} } }
-    up_hold_3: { name: Up 3s hold, default: [], selector: { action: {} } }
-    up_hold_5: { name: Up 5s hold, default: [], selector: { action: {} } }
-    up_hold_10: { name: Up 10s hold, default: [], selector: { action: {} } }
-    up_1_click_1s_hold: { name: Up 1 click + 1s hold, default: [], selector: { action: {} } }
-    up_1_click_3s_hold: { name: Up 1 click + 3s hold, default: [], selector: { action: {} } }
-    up_1_click_5s_hold: { name: Up 1 click + 5s hold, default: [], selector: { action: {} } }
-    up_1_click_10s_hold: { name: Up 1 click + 10s hold, default: [], selector: { action: {} } }
-    up_1s_hold_1_click: { name: Up 1s hold + 1 click, default: [], selector: { action: {} } }
-    up_3s_hold_1_click: { name: Up 3s hold + 1 click, default: [], selector: { action: {} } }
-    up_5s_hold_1_click: { name: Up 5s hold + 1 click, default: [], selector: { action: {} } }
-    up_10s_hold_1_click: { name: Up 10s hold + 1 click, default: [], selector: { action: {} } }
-
-    # --------------------------------
-    # DOWN BUTTON
-    # --------------------------------
-    down_press: { name: Down press, default: [], selector: { action: {} } }
-    down_1_click: { name: Down 1 click, default: [], selector: { action: {} } }
-    down_2_click: { name: Down 2 clicks, default: [], selector: { action: {} } }
-    down_3_click: { name: Down 3 clicks, default: [], selector: { action: {} } }
-    down_4_click: { name: Down 4 clicks, default: [], selector: { action: {} } }
-    down_5_click: { name: Down 5 clicks, default: [], selector: { action: {} } }
-    down_6_click: { name: Down 6 clicks, default: [], selector: { action: {} } }
-    down_7_click: { name: Down 7 clicks, default: [], selector: { action: {} } }
-    down_8_click: { name: Down 8 clicks, default: [], selector: { action: {} } }
-    down_9_click: { name: Down 9 clicks, default: [], selector: { action: {} } }
-    down_10_click: { name: Down 10 clicks, default: [], selector: { action: {} } }
-    down_hold_1: { name: Down 1s hold, default: [], selector: { action: {} } }
-    down_hold_3: { name: Down 3s hold, default: [], selector: { action: {} } }
-    down_hold_5: { name: Down 5s hold, default: [], selector: { action: {} } }
-    down_hold_10: { name: Down 10s hold, default: [], selector: { action: {} } }
-    down_1_click_1s_hold: { name: Down 1 click + 1s hold, default: [], selector: { action: {} } }
-    down_1_click_3s_hold: { name: Down 1 click + 3s hold, default: [], selector: { action: {} } }
-    down_1_click_5s_hold: { name: Down 1 click + 5s hold, default: [], selector: { action: {} } }
-    down_1_click_10s_hold: { name: Down 1 click + 10s hold, default: [], selector: { action: {} } }
-    down_1s_hold_1_click: { name: Down 1s hold + 1 click, default: [], selector: { action: {} } }
-    down_3s_hold_1_click: { name: Down 3s hold + 1 click, default: [], selector: { action: {} } }
-    down_5s_hold_1_click: { name: Down 5s hold + 1 click, default: [], selector: { action: {} } }
-    down_10s_hold_1_click: { name: Down 10s hold + 1 click, default: [], selector: { action: {} } }
-
-    # --------------------------------
-    # HUE BUTTON
-    # --------------------------------
-    hue_press: { name: Hue press, default: [], selector: { action: {} } }
-    hue_1_click: { name: Hue 1 click, default: [], selector: { action: {} } }
-    hue_2_click: { name: Hue 2 clicks, default: [], selector: { action: {} } }
-    hue_3_click: { name: Hue 3 clicks, default: [], selector: { action: {} } }
-    hue_4_click: { name: Hue 4 clicks, default: [], selector: { action: {} } }
-    hue_5_click: { name: Hue 5 clicks, default: [], selector: { action: {} } }
-    hue_6_click: { name: Hue 6 clicks, default: [], selector: { action: {} } }
-    hue_7_click: { name: Hue 7 clicks, default: [], selector: { action: {} } }
-    hue_8_click: { name: Hue 8 clicks, default: [], selector: { action: {} } }
-    hue_9_click: { name: Hue 9 clicks, default: [], selector: { action: {} } }
-    hue_10_click: { name: Hue 10 clicks, default: [], selector: { action: {} } }
-    hue_hold_1: { name: Hue 1s hold, default: [], selector: { action: {} } }
-    hue_hold_3: { name: Hue 3s hold, default: [], selector: { action: {} } }
-    hue_hold_5: { name: Hue 5s hold, default: [], selector: { action: {} } }
-    hue_hold_10: { name: Hue 10s hold, default: [], selector: { action: {} } }
-    hue_1_click_1s_hold: { name: Hue 1 click + 1s hold, default: [], selector: { action: {} } }
-    hue_1_click_3s_hold: { name: Hue 1 click + 3s hold, default: [], selector: { action: {} } }
-    hue_1_click_5s_hold: { name: Hue 1 click + 5s hold, default: [], selector: { action: {} } }
-    hue_1_click_10s_hold: { name: Hue 1 click + 10s hold, default: [], selector: { action: {} } }
-    hue_1s_hold_1_click: { name: Hue 1s hold + 1 click, default: [], selector: { action: {} } }
-    hue_3s_hold_1_click: { name: Hue 3s hold + 1 click, default: [], selector: { action: {} } }
-    hue_5s_hold_1_click: { name: Hue 5s hold + 1 click, default: [], selector: { action: {} } }
-    hue_10s_hold_1_click: { name: Hue 10s hold + 1 click, default: [], selector: { action: {} } }
-    # --------------------------------
-    # BUTTON COMBINATIONS
-    # --------------------------------
-    power_up: { name: Power + Up, default: [], selector: { action: {} } }
-    power_down: { name: Power + Down, default: [], selector: { action: {} } }
-    power_hue: { name: Power + Hue, default: [], selector: { action: {} } }
-    hue_up: { name: Hue + Up, default: [], selector: { action: {} } }
-    hue_down: { name: Hue + Down, default: [], selector: { action: {} } }
-    power_hue_up: { name: Power + Hue + Up, default: [], selector: { action: {} } }
-    power_hue_down: { name: Power + Hue + Down, default: [], selector: { action: {} } }
-    power_hue_up_down: { name: Power + Hue + Up + Down, default: [], selector: { action: {} } }
+mode: restart # Important: Restarts on every click to reset the "Wait" timer
 
 trigger:
-  - platform: event
-    event_type: state_changed
-    event_data:
-      entity_id: !input action_sensor
+  - platform: state
+    entity_id: !input action_sensor
 
 condition:
   - condition: template
-    value_template: '{{ trigger.event.data.new_state.state not in ("", "None", "unknown") }}'
+    # Only trigger on 'press' events, ignore 'release' or 'hold' for the click counter
+    value_template: "{{ 'press' in states(trigger.entity_id) and 'release' not in states(trigger.entity_id) }}"
+
 action:
   - variables:
-      helper_last_controller_event: !input helper_last_controller_event
-      command: "{{ trigger.event.data.new_state.state }}"
-      prev_command: "{{ states(helper_last_controller_event) }}"
-  - service: input_text.set_value
+      helper: !input helper_last_event
+      # Parse the JSON from our helper or set defaults
+      last_data: >
+        {% set val = states(helper) %}
+        {{ val if val != 'unknown' and val != '' else '{"count":0, "last_time":0, "button":""}' }}
+      last_count: "{{ (last_data | from_json).count | int }}"
+      last_time: "{{ (last_data | from_json).last_time | float }}"
+      last_button: "{{ (last_data | from_json).button }}"
+      current_button: "{{ states(trigger.entity_id).split('_')[0] }}"
+      now_ms: "{{ as_timestamp(now()) * 1000 }}"
+      timeout: !input click_timeout
+
+  - variant: >
+      {% set new_count = (last_count + 1) if (now_ms - last_time < timeout and last_button == current_button) else 1 %}
+      {% set new_data = {'count': new_count, 'last_time': now_ms, 'button': current_button} %}
+      {{ new_data | to_json }}
+    service: input_text.set_value
+    target:
+      entity_id: !input helper_last_event
     data:
-      entity_id: !input helper_last_controller_event
-      value: "{{ command }}"
+      value: "{{ new_data }}"
+
+  # Wait to see if another click comes in
+  - delay:
+      milliseconds: !input click_timeout
+
+  # If we got here without the automation being "restarted" by a new click, execute
+  - variables:
+      final_data: "{{ states(helper) | from_json }}"
+      final_count: "{{ final_data.count }}"
+      final_button: "{{ final_data.button }}"
+
   - choose:
-      # ----------------------
-      # POWER BUTTON
-      # ----------------------
-      - conditions: '{{ command == "power_press" }}'
-        sequence: !input power_press
-      - conditions: '{{ command == "power_1_click" }}'
-        sequence: !input power_1_click
-      - conditions: '{{ command == "power_2_click" }}'
-        sequence: !input power_2_click
-      - conditions: '{{ command == "power_3_click" }}'
-        sequence: !input power_3_click
-      - conditions: '{{ command == "power_4_click" }}'
-        sequence: !input power_4_click
-      - conditions: '{{ command == "power_5_click" }}'
-        sequence: !input power_5_click
-      - conditions: '{{ command == "power_6_click" }}'
-        sequence: !input power_6_click
-      - conditions: '{{ command == "power_7_click" }}'
-        sequence: !input power_7_click
-      - conditions: '{{ command == "power_8_click" }}'
-        sequence: !input power_8_click
-      - conditions: '{{ command == "power_9_click" }}'
-        sequence: !input power_9_click
-      - conditions: '{{ command == "power_10_click" }}'
-        sequence: !input power_10_click
-      - conditions: '{{ command == "power_hold_1" }}'
-        sequence: !input power_hold_1
-      - conditions: '{{ command == "power_hold_3" }}'
-        sequence: !input power_hold_3
-      - conditions: '{{ command == "power_hold_5" }}'
-        sequence: !input power_hold_5
-      - conditions: '{{ command == "power_hold_10" }}'
-        sequence: !input power_hold_10
-      - conditions: '{{ command == "power_1_click_1s_hold" }}'
-        sequence: !input power_1_click_1s_hold
-      - conditions: '{{ command == "power_1_click_3s_hold" }}'
-        sequence: !input power_1_click_3s_hold
-      - conditions: '{{ command == "power_1_click_5s_hold" }}'
-        sequence: !input power_1_click_5s_hold
-      - conditions: '{{ command == "power_1_click_10s_hold" }}'
-        sequence: !input power_1_click_10s_hold
-      - conditions: '{{ command == "power_1s_hold_1_click" }}'
-        sequence: !input power_1s_hold_1_click
-      - conditions: '{{ command == "power_3s_hold_1_click" }}'
-        sequence: !input power_3s_hold_1_click
-      - conditions: '{{ command == "power_5s_hold_1_click" }}'
-        sequence: !input power_5s_hold_1_click
-      - conditions: '{{ command == "power_10s_hold_1_click" }}'
-        sequence: !input power_10s_hold_1_click
+      # ON BUTTON LOGIC
+      - conditions: "{{ final_button == 'on' }}"
+        sequence:
+          - choose:
+              - conditions: "{{ final_count == 1 }}"
+                sequence: !input on_single
+              - conditions: "{{ final_count == 2 }}"
+                sequence: !input on_double
+              - conditions: "{{ final_count == 3 }}"
+                sequence: !input on_triple
 
-      # ----------------------
-      # UP BUTTON
-      # ----------------------
-      - conditions: '{{ command == "up_press" }}'
-        sequence: !input up_press
-      - conditions: '{{ command == "up_1_click" }}'
-        sequence: !input up_1_click
-      - conditions: '{{ command == "up_2_click" }}'
-        sequence: !input up_2_click
-      - conditions: '{{ command == "up_3_click" }}'
-        sequence: !input up_3_click
-      - conditions: '{{ command == "up_4_click" }}'
-        sequence: !input up_4_click
-      - conditions: '{{ command == "up_5_click" }}'
-        sequence: !input up_5_click
-      - conditions: '{{ command == "up_6_click" }}'
-        sequence: !input up_6_click
-      - conditions: '{{ command == "up_7_click" }}'
-        sequence: !input up_7_click
-      - conditions: '{{ command == "up_8_click" }}'
-        sequence: !input up_8_click
-      - conditions: '{{ command == "up_9_click" }}'
-        sequence: !input up_9_click
-      - conditions: '{{ command == "up_10_click" }}'
-        sequence: !input up_10_click
-      - conditions: '{{ command == "up_hold_1" }}'
-        sequence: !input up_hold_1
-      - conditions: '{{ command == "up_hold_3" }}'
-        sequence: !input up_hold_3
-      - conditions: '{{ command == "up_hold_5" }}'
-        sequence: !input up_hold_5
-      - conditions: '{{ command == "up_hold_10" }}'
-        sequence: !input up_hold_10
-      - conditions: '{{ command == "up_1_click_1s_hold" }}'
-        sequence: !input up_1_click_1s_hold
-      - conditions: '{{ command == "up_1_click_3s_hold" }}'
-        sequence: !input up_1_click_3s_hold
-      - conditions: '{{ command == "up_1_click_5s_hold" }}'
-        sequence: !input up_1_click_5s_hold
-      - conditions: '{{ command == "up_1_click_10s_hold" }}'
-        sequence: !input up_1_click_10s_hold
-      - conditions: '{{ command == "up_1s_hold_1_click" }}'
-        sequence: !input up_1s_hold_1_click
-      - conditions: '{{ command == "up_3s_hold_1_click" }}'
-        sequence: !input up_3s_hold_1_click
-      - conditions: '{{ command == "up_5s_hold_1_click" }}'
-        sequence: !input up_5s_hold_1_click
-      - conditions: '{{ command == "up_10s_hold_1_click" }}'
-        sequence: !input up_10s_hold_1_click
-      # ----------------------
-      # DOWN BUTTON
-      # ----------------------
-      - conditions: '{{ command == "down_press" }}'
-        sequence: !input down_press
-      - conditions: '{{ command == "down_1_click" }}'
-        sequence: !input down_1_click
-      - conditions: '{{ command == "down_2_click" }}'
-        sequence: !input down_2_click
-      - conditions: '{{ command == "down_3_click" }}'
-        sequence: !input down_3_click
-      - conditions: '{{ command == "down_4_click" }}'
-        sequence: !input down_4_click
-      - conditions: '{{ command == "down_5_click" }}'
-        sequence: !input down_5_click
-      - conditions: '{{ command == "down_6_click" }}'
-        sequence: !input down_6_click
-      - conditions: '{{ command == "down_7_click" }}'
-        sequence: !input down_7_click
-      - conditions: '{{ command == "down_8_click" }}'
-        sequence: !input down_8_click
-      - conditions: '{{ command == "down_9_click" }}'
-        sequence: !input down_9_click
-      - conditions: '{{ command == "down_10_click" }}'
-        sequence: !input down_10_click
-      - conditions: '{{ command == "down_hold_1" }}'
-        sequence: !input down_hold_1
-      - conditions: '{{ command == "down_hold_3" }}'
-        sequence: !input down_hold_3
-      - conditions: '{{ command == "down_hold_5" }}'
-        sequence: !input down_hold_5
-      - conditions: '{{ command == "down_hold_10" }}'
-        sequence: !input down_hold_10
-      - conditions: '{{ command == "down_1_click_1s_hold" }}'
-        sequence: !input down_1_click_1s_hold
-      - conditions: '{{ command == "down_1_click_3s_hold" }}'
-        sequence: !input down_1_click_3s_hold
-      - conditions: '{{ command == "down_1_click_5s_hold" }}'
-        sequence: !input down_1_click_5s_hold
-      - conditions: '{{ command == "down_1_click_10s_hold" }}'
-        sequence: !input down_1_click_10s_hold
-      - conditions: '{{ command == "down_1s_hold_1_click" }}'
-        sequence: !input down_1s_hold_1_click
-      - conditions: '{{ command == "down_3s_hold_1_click" }}'
-        sequence: !input down_3s_hold_1_click
-      - conditions: '{{ command == "down_5s_hold_1_click" }}'
-        sequence: !input down_5s_hold_1_click
-      - conditions: '{{ command == "down_10s_hold_1_click" }}'
-        sequence: !input down_10s_hold_1_click
-
-      # ----------------------
-      # HUE BUTTON
-      # ----------------------
-      - conditions: '{{ command == "hue_press" }}'
-        sequence: !input hue_press
-      - conditions: '{{ command == "hue_1_click" }}'
-        sequence: !input hue_1_click
-      - conditions: '{{ command == "hue_2_click" }}'
-        sequence: !input hue_2_click
-      - conditions: '{{ command == "hue_3_click" }}'
-        sequence: !input hue_3_click
-      - conditions: '{{ command == "hue_4_click" }}'
-        sequence: !input hue_4_click
-      - conditions: '{{ command == "hue_5_click" }}'
-        sequence: !input hue_5_click
-      - conditions: '{{ command == "hue_6_click" }}'
-        sequence: !input hue_6_click
-      - conditions: '{{ command == "hue_7_click" }}'
-        sequence: !input hue_7_click
-      - conditions: '{{ command == "hue_8_click" }}'
-        sequence: !input hue_8_click
-      - conditions: '{{ command == "hue_9_click" }}'
-        sequence: !input hue_9_click
-      - conditions: '{{ command == "hue_10_click" }}'
-        sequence: !input hue_10_click
-      - conditions: '{{ command == "hue_hold_1" }}'
-        sequence: !input hue_hold_1
-      - conditions: '{{ command == "hue_hold_3" }}'
-        sequence: !input hue_hold_3
-      - conditions: '{{ command == "hue_hold_5" }}'
-        sequence: !input hue_hold_5
-      - conditions: '{{ command == "hue_hold_10" }}'
-        sequence: !input hue_hold_10
-      - conditions: '{{ command == "hue_1_click_1s_hold" }}'
-        sequence: !input hue_1_click_1s_hold
-      - conditions: '{{ command == "hue_1_click_3s_hold" }}'
-        sequence: !input hue_1_click_3s_hold
-      - conditions: '{{ command == "hue_1_click_5s_hold" }}'
-        sequence: !input hue_1_click_5s_hold
-      - conditions: '{{ command == "hue_1_click_10s_hold" }}'
-        sequence: !input hue_1_click_10s_hold
-      - conditions: '{{ command == "hue_1s_hold_1_click" }}'
-        sequence: !input hue_1s_hold_1_click
-      - conditions: '{{ command == "hue_3s_hold_1_click" }}'
-        sequence: !input hue_3s_hold_1_click
-      - conditions: '{{ command == "hue_5s_hold_1_click" }}'
-        sequence: !input hue_5s_hold_1_click
-      - conditions: '{{ command == "hue_10s_hold_1_click" }}'
-        sequence: !input hue_10s_hold_1_click
-
-      # ----------------------
-      # BUTTON COMBINATIONS
-      # ----------------------
-      - conditions: '{{ command == "power_up" }}'
-        sequence: !input power_up
-      - conditions: '{{ command == "power_down" }}'
-        sequence: !input power_down
-      - conditions: '{{ command == "power_hue" }}'
-        sequence: !input power_hue
-      - conditions: '{{ command == "hue_up" }}'
-        sequence: !input hue_up
-      - conditions: '{{ command == "hue_down" }}'
-        sequence: !input hue_down
-      - conditions: '{{ command == "power_hue_up" }}'
-        sequence: !input power_hue_up
-      - conditions: '{{ command == "power_hue_down" }}'
-        sequence: !input power_hue_down
-      - conditions: '{{ command == "power_hue_up_down" }}'
-        sequence: !input power_hue_up_down
-
-mode: restart
-max_exceeded: silent
+  # Reset helper after execution so the next press starts fresh
+  - service: input_text.set_value
+    target:
+      entity_id: !input helper_last_event
+    data:
+      value: '{"count":0, "last_time":0, "button":""}'
