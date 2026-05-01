@@ -1,55 +1,48 @@
 blueprint:
-  name: Philips Hue Dimmer v2 (Z2M) - Pro Multi-Click
+  name: Andrew's Multi-Click Engine (Sensor/Event Hybrid)
   description: >
-    Supports Initial Press (instant) plus Single, Double, Triple, Quad, and Quintuple clicks.
-    Requires a Text Helper (input_text) for state tracking.
+    A simple, fast multi-click engine.
+    Triggers on 'event', validates via 'sensor'.
+    Requires a Text Helper to store the click count.
   domain: automation
   input:
-    action_sensor:
-      name: Action Sensor
+    event_entity:
+      name: Event Entity
+      description: The event entity to trigger on.
       selector:
         entity:
-          integration: mqtt
+          domain: event
+    sensor_entity:
+      name: Sensor Entity
+      description: The sensor entity to check for "press" state.
+      selector:
+        entity:
           domain: sensor
-    helper_last_event:
-      name: Text Helper
-      description: Create an input_text helper (max length 255).
+    counter_helper:
+      name: Counter Helper
+      description: An input_text helper to store the count (e.g., 1, 2, 3).
       selector:
         entity:
           domain: input_text
-    click_timeout:
-      name: Click Speed (Timeout)
-      description: Time in ms to wait for the next click before executing.
-      default: 400
+    click_delay:
+      name: Click Speed
+      description: Time to wait for the next click (milliseconds).
+      default: 100
       selector:
         number:
-          min: 200
+          min: 50
           max: 1000
           unit_of_measurement: ms
-    # ACTIONS
-    on_initial:
-      name: ON - Initial Press (Immediate)
-      description: Fired immediately on the very first click.
+    single_click_action:
+      name: Single Click Action
       default: []
       selector: {action: {}}
-    on_single:
-      name: ON - Single Click (After timeout)
+    double_click_action:
+      name: Double Click Action
       default: []
       selector: {action: {}}
-    on_double:
-      name: ON - Double Click
-      default: []
-      selector: {action: {}}
-    on_triple:
-      name: ON - Triple Click
-      default: []
-      selector: {action: {}}
-    on_quad:
-      name: ON - Quadruple Click
-      default: []
-      selector: {action: {}}
-    on_quint:
-      name: ON - Quintuple Click
+    triple_click_action:
+      name: Triple Click Action
       default: []
       selector: {action: {}}
 
@@ -58,74 +51,47 @@ max_exceeded: silent
 
 trigger:
   - platform: state
-    entity_id: !input action_sensor
+    entity_id: !input event_entity
 
 condition:
   - condition: template
-    value_template: "{{ 'press' in states(trigger.entity_id) and 'release' not in states(trigger.entity_id) }}"
+    value_template: >-
+      {{ 'press' in states(sensor_input) and 'release' not in states(sensor_input) }}
+    variables:
+      sensor_input: !input sensor_entity
 
 action:
   - variables:
-      helper: !input helper_last_event
-      # Logic to parse or default JSON
-      last_data: >
-        {% set val = states(helper) %}
-        {{ val if val != 'unknown' and val != '' and '{' in val else '{"count":0, "last_time":0, "button":""}' }}
-      last_count: "{{ (last_data | from_json).count | int }}"
-      last_time: "{{ (last_data | from_json).last_time | float }}"
-      last_button: "{{ (last_data | from_json).button }}"
-      current_button: "{{ states(trigger.entity_id).split('_')[0] }}"
-      now_ms: "{{ as_timestamp(now()) * 1000 }}"
-      timeout: !input click_timeout
-      # Increment count if within timeout
-      new_count: >
-        {% if (now_ms - last_time < timeout) and (last_button == current_button) %}
-          {{ last_count + 1 }}
-        {% else %}
-          1
-        {% endif %}
+      helper: !input counter_helper
+      current_count: "{{ states(helper) | int(0) }}"
+      new_count: "{{ current_count + 1 }}"
 
-  # 1. Fire INITIAL action if this is the first click in a sequence
-  - choose:
-      - conditions: "{{ new_count == 1 and current_button == 'on' }}"
-        sequence: !input on_initial
-
-  # 2. Update Helper state
-  - service: input_text.set_value
+  # Increment Helper
+  - action: input_text.set_value
     target:
-      entity_id: !input helper_last_event
+      entity_id: !input counter_helper
     data:
-      value: >
-        {{ {'count': new_count | int, 'last_time': now_ms | float, 'button': current_button} | to_json }}
+      value: "{{ new_count }}"
 
-  # 3. Wait for multi-click timeout
+  # Wait for more clicks
   - delay:
-      milliseconds: !input click_timeout
+      milliseconds: !input click_delay
 
-  # 4. Final Execution (Logic only reaches here if no more clicks happen)
+  # Final Count Check
   - variables:
-      final_data: "{{ states(helper) | from_json }}"
-      final_count: "{{ final_data.count | int }}"
-      final_button: "{{ final_data.button }}"
+      final_count: "{{ states(helper) | int(0) }}"
 
   - choose:
-      - conditions: "{{ final_button == 'on' }}"
-        sequence:
-          - choose:
-              - conditions: "{{ final_count == 1 }}"
-                sequence: !input on_single
-              - conditions: "{{ final_count == 2 }}"
-                sequence: !input on_double
-              - conditions: "{{ final_count == 3 }}"
-                sequence: !input on_triple
-              - conditions: "{{ final_count == 4 }}"
-                sequence: !input on_quad
-              - conditions: "{{ final_count == 5 }}"
-                sequence: !input on_quint
+      - conditions: "{{ final_count == 1 }}"
+        sequence: !input single_click_action
+      - conditions: "{{ final_count == 2 }}"
+        sequence: !input double_click_action
+      - conditions: "{{ final_count == 3 }}"
+        sequence: !input triple_click_action
 
-  # 5. Clean up helper
-  - service: input_text.set_value
+  # Reset Helper to 0
+  - action: input_text.set_value
     target:
-      entity_id: !input helper_last_event
+      entity_id: !input counter_helper
     data:
-      value: '{"count":0, "last_time":0, "button":""}'
+      value: "0"
