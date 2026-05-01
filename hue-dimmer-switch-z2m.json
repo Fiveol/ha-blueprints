@@ -1,48 +1,220 @@
 blueprint:
-  name: Andrew's Multi-Click Engine (Sensor/Event Hybrid)
-  description: >
-    A simple, fast multi-click engine.
-    Triggers on 'event', validates via 'sensor'.
-    Requires a Text Helper to store the click count.
+  name: Philips Hue Dimmer Z2M
   domain: automation
   input:
     event_entity:
       name: Event Entity
-      description: The event entity to trigger on.
       selector:
         entity:
           domain: event
     sensor_entity:
       name: Sensor Entity
-      description: The sensor entity to check for "press" state.
       selector:
         entity:
           domain: sensor
     counter_helper:
       name: Counter Helper
-      description: An input_text helper to store the count (e.g., 1, 2, 3).
       selector:
         entity:
           domain: input_text
     click_delay:
       name: Click Speed
-      description: Time to wait for the next click (milliseconds).
-      default: 100
+      default: 300
       selector:
         number:
           min: 50
           max: 1000
           unit_of_measurement: ms
-    single_click_action:
-      name: Single Click Action
+    on_1:
+      name: ON - 1 Click
       default: []
       selector: {action: {}}
-    double_click_action:
-      name: Double Click Action
+    on_2:
+      name: ON - 2 Clicks
       default: []
       selector: {action: {}}
-    triple_click_action:
-      name: Triple Click Action
+    on_3:
+      name: ON - 3 Clicks
+      default: []
+      selector: {action: {}}
+    on_4:
+      name: ON - 4 Clicks
+      default: []
+      selector: {action: {}}
+    on_5:
+      name: ON - 5 Clicks
+      default: []
+      selector: {action: {}}
+    on_6:
+      name: ON - 6 Clicks
+      default: []
+      selector: {action: {}}
+    on_7:
+      name: ON - 7 Clicks
+      default: []
+      selector: {action: {}}
+    on_8:
+      name: ON - 8 Clicks
+      default: []
+      selector: {action: {}}
+    on_9:
+      name: ON - 9 Clicks
+      default: []
+      selector: {action: {}}
+    on_10:
+      name: ON - 10 Clicks
+      default: []
+      selector: {action: {}}
+    on_hold:
+      name: ON - Hold
+      default: []
+      selector: {action: {}}
+    on_hold_release:
+      name: ON - Hold Release
+      default: []
+      selector: {action: {}}
+    up_1:
+      name: UP - 1 Click
+      default: []
+      selector: {action: {}}
+    up_2:
+      name: UP - 2 Clicks
+      default: []
+      selector: {action: {}}
+    up_3:
+      name: UP - 3 Clicks
+      default: []
+      selector: {action: {}}
+    up_4:
+      name: UP - 4 Clicks
+      default: []
+      selector: {action: {}}
+    up_5:
+      name: UP - 5 Clicks
+      default: []
+      selector: {action: {}}
+    up_6:
+      name: UP - 6 Clicks
+      default: []
+      selector: {action: {}}
+    up_7:
+      name: UP - 7 Clicks
+      default: []
+      selector: {action: {}}
+    up_8:
+      name: UP - 8 Clicks
+      default: []
+      selector: {action: {}}
+    up_9:
+      name: UP - 9 Clicks
+      default: []
+      selector: {action: {}}
+    up_10:
+      name: UP - 10 Clicks
+      default: []
+      selector: {action: {}}
+    up_hold:
+      name: UP - Hold
+      default: []
+      selector: {action: {}}
+    up_hold_release:
+      name: UP - Hold Release
+      default: []
+      selector: {action: {}}
+    down_1:
+      name: DOWN - 1 Click
+      default: []
+      selector: {action: {}}
+    down_2:
+      name: DOWN - 2 Clicks
+      default: []
+      selector: {action: {}}
+    down_3:
+      name: DOWN - 3 Clicks
+      default: []
+      selector: {action: {}}
+    down_4:
+      name: DOWN - 4 Clicks
+      default: []
+      selector: {action: {}}
+    down_5:
+      name: DOWN - 5 Clicks
+      default: []
+      selector: {action: {}}
+    down_6:
+      name: DOWN - 6 Clicks
+      default: []
+      selector: {action: {}}
+    down_7:
+      name: DOWN - 7 Clicks
+      default: []
+      selector: {action: {}}
+    down_8:
+      name: DOWN - 8 Clicks
+      default: []
+      selector: {action: {}}
+    down_9:
+      name: DOWN - 9 Clicks
+      default: []
+      selector: {action: {}}
+    down_10:
+      name: DOWN - 10 Clicks
+      default: []
+      selector: {action: {}}
+    down_hold:
+      name: DOWN - Hold
+      default: []
+      selector: {action: {}}
+    down_hold_release:
+      name: DOWN - Hold Release
+      default: []
+      selector: {action: {}}
+    off_1:
+      name: OFF - 1 Click
+      default: []
+      selector: {action: {}}
+    off_2:
+      name: OFF - 2 Clicks
+      default: []
+      selector: {action: {}}
+    off_3:
+      name: OFF - 3 Clicks
+      default: []
+      selector: {action: {}}
+    off_4:
+      name: OFF - 4 Clicks
+      default: []
+      selector: {action: {}}
+    off_5:
+      name: OFF - 5 Clicks
+      default: []
+      selector: {action: {}}
+    off_6:
+      name: OFF - 6 Clicks
+      default: []
+      selector: {action: {}}
+    off_7:
+      name: OFF - 7 Clicks
+      default: []
+      selector: {action: {}}
+    off_8:
+      name: OFF - 8 Clicks
+      default: []
+      selector: {action: {}}
+    off_9:
+      name: OFF - 9 Clicks
+      default: []
+      selector: {action: {}}
+    off_10:
+      name: OFF - 10 Clicks
+      default: []
+      selector: {action: {}}
+    off_hold:
+      name: OFF - Hold
+      default: []
+      selector: {action: {}}
+    off_hold_release:
+      name: OFF - Hold Release
       default: []
       selector: {action: {}}
 
@@ -53,45 +225,144 @@ trigger:
   - platform: state
     entity_id: !input event_entity
 
-condition:
-  - condition: template
-    value_template: >-
-      {{ 'press' in states(sensor_input) and 'release' not in states(sensor_input) }}
-    variables:
-      sensor_input: !input sensor_entity
-
 action:
   - variables:
+      sensor: !input sensor_entity
+      raw_state: "{{ states(sensor) }}"
       helper: !input counter_helper
-      current_count: "{{ states(helper) | int(0) }}"
-      new_count: "{{ current_count + 1 }}"
-
-  # Increment Helper
-  - action: input_text.set_value
-    target:
-      entity_id: !input counter_helper
-    data:
-      value: "{{ new_count }}"
-
-  # Wait for more clicks
-  - delay:
-      milliseconds: !input click_delay
-
-  # Final Count Check
-  - variables:
-      final_count: "{{ states(helper) | int(0) }}"
 
   - choose:
-      - conditions: "{{ final_count == 1 }}"
-        sequence: !input single_click_action
-      - conditions: "{{ final_count == 2 }}"
-        sequence: !input double_click_action
-      - conditions: "{{ final_count == 3 }}"
-        sequence: !input triple_click_action
-
-  # Reset Helper to 0
-  - action: input_text.set_value
-    target:
-      entity_id: !input counter_helper
-    data:
-      value: "0"
+      - conditions: "{{ 'hold' in raw_state and 'release' not in raw_state }}"
+        sequence:
+          - choose:
+              - conditions: "{{ 'on' in raw_state }}"
+                sequence: !input on_hold
+              - conditions: "{{ 'up' in raw_state }}"
+                sequence: !input up_hold
+              - conditions: "{{ 'down' in raw_state }}"
+                sequence: !input down_hold
+              - conditions: "{{ 'off' in raw_state }}"
+                sequence: !input off_hold
+      - conditions: "{{ 'hold_release' in raw_state }}"
+        sequence:
+          - choose:
+              - conditions: "{{ 'on' in raw_state }}"
+                sequence: !input on_hold_release
+              - conditions: "{{ 'up' in raw_state }}"
+                sequence: !input up_hold_release
+              - conditions: "{{ 'down' in raw_state }}"
+                sequence: !input down_hold_release
+              - conditions: "{{ 'off' in raw_state }}"
+                sequence: !input off_hold_release
+      - conditions: "{{ 'press_release' in raw_state }}"
+        sequence:
+          - variables:
+              new_count: "{{ (states(helper) | int(0)) + 1 }}"
+          - action: input_text.set_value
+            target:
+              entity_id: !input counter_helper
+            data:
+              value: "{{ new_count }}"
+          - delay:
+              milliseconds: !input click_delay
+          - variables:
+              final_count: "{{ states(helper) | int(0) }}"
+              btn: "{{ raw_state.split('_')[0] }}"
+          - choose:
+              - conditions: "{{ btn == 'on' }}"
+                sequence:
+                  - choose:
+                      - conditions: "{{ final_count == 1 }}"
+                        sequence: !input on_1
+                      - conditions: "{{ final_count == 2 }}"
+                        sequence: !input on_2
+                      - conditions: "{{ final_count == 3 }}"
+                        sequence: !input on_3
+                      - conditions: "{{ final_count == 4 }}"
+                        sequence: !input on_4
+                      - conditions: "{{ final_count == 5 }}"
+                        sequence: !input on_5
+                      - conditions: "{{ final_count == 6 }}"
+                        sequence: !input on_6
+                      - conditions: "{{ final_count == 7 }}"
+                        sequence: !input on_7
+                      - conditions: "{{ final_count == 8 }}"
+                        sequence: !input on_8
+                      - conditions: "{{ final_count == 9 }}"
+                        sequence: !input on_9
+                      - conditions: "{{ final_count == 10 }}"
+                        sequence: !input on_10
+              - conditions: "{{ btn == 'up' }}"
+                sequence:
+                  - choose:
+                      - conditions: "{{ final_count == 1 }}"
+                        sequence: !input up_1
+                      - conditions: "{{ final_count == 2 }}"
+                        sequence: !input up_2
+                      - conditions: "{{ final_count == 3 }}"
+                        sequence: !input up_3
+                      - conditions: "{{ final_count == 4 }}"
+                        sequence: !input up_4
+                      - conditions: "{{ final_count == 5 }}"
+                        sequence: !input up_5
+                      - conditions: "{{ final_count == 6 }}"
+                        sequence: !input up_6
+                      - conditions: "{{ final_count == 7 }}"
+                        sequence: !input up_7
+                      - conditions: "{{ final_count == 8 }}"
+                        sequence: !input up_8
+                      - conditions: "{{ final_count == 9 }}"
+                        sequence: !input up_9
+                      - conditions: "{{ final_count == 10 }}"
+                        sequence: !input up_10
+              - conditions: "{{ btn == 'down' }}"
+                sequence:
+                  - choose:
+                      - conditions: "{{ final_count == 1 }}"
+                        sequence: !input down_1
+                      - conditions: "{{ final_count == 2 }}"
+                        sequence: !input down_2
+                      - conditions: "{{ final_count == 3 }}"
+                        sequence: !input down_3
+                      - conditions: "{{ final_count == 4 }}"
+                        sequence: !input down_4
+                      - conditions: "{{ final_count == 5 }}"
+                        sequence: !input down_5
+                      - conditions: "{{ final_count == 6 }}"
+                        sequence: !input down_6
+                      - conditions: "{{ final_count == 7 }}"
+                        sequence: !input down_7
+                      - conditions: "{{ final_count == 8 }}"
+                        sequence: !input down_8
+                      - conditions: "{{ final_count == 9 }}"
+                        sequence: !input down_9
+                      - conditions: "{{ final_count == 10 }}"
+                        sequence: !input down_10
+              - conditions: "{{ btn == 'off' }}"
+                sequence:
+                  - choose:
+                      - conditions: "{{ final_count == 1 }}"
+                        sequence: !input off_1
+                      - conditions: "{{ final_count == 2 }}"
+                        sequence: !input off_2
+                      - conditions: "{{ final_count == 3 }}"
+                        sequence: !input off_3
+                      - conditions: "{{ final_count == 4 }}"
+                        sequence: !input off_4
+                      - conditions: "{{ final_count == 5 }}"
+                        sequence: !input off_5
+                      - conditions: "{{ final_count == 6 }}"
+                        sequence: !input off_6
+                      - conditions: "{{ final_count == 7 }}"
+                        sequence: !input off_7
+                      - conditions: "{{ final_count == 8 }}"
+                        sequence: !input off_8
+                      - conditions: "{{ final_count == 9 }}"
+                        sequence: !input off_9
+                      - conditions: "{{ final_count == 10 }}"
+                        sequence: !input off_10
+          - action: input_text.set_value
+            target:
+              entity_id: !input counter_helper
+            data:
+              value: "0"
