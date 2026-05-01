@@ -1,8 +1,8 @@
 blueprint:
   name: Philips Hue Dimmer v2 (Z2M) - Multi-Click Engine
   description: >
-    Extends the Hue Dimmer V2 to support up to 5 clicks using a Text Helper to track state.
-    Note: Multi-click introduces a small delay (the timeout) before the action executes.
+    Uses a Text Helper to track click counts and timing.
+    Supports up to 5 clicks per button.
   domain: automation
   input:
     action_sensor:
@@ -13,20 +13,20 @@ blueprint:
           domain: sensor
     helper_last_event:
       name: Text Helper
-      description: Create a Text Helper (input_text) to store click count and timing.
+      description: Create an input_text helper to store JSON state.
       selector:
         entity:
           domain: input_text
     click_timeout:
       name: Click Speed
-      description: Max time (milliseconds) between clicks to count as a multi-click.
-      default: 500
+      description: Timeout in milliseconds to wait for the next click.
+      default: 400
       selector:
         number:
           min: 200
           max: 1000
           unit_of_measurement: ms
-    # Example Actions for ON button
+    # Example Actions for the ON button
     on_single:
       name: ON - Single Press
       default: []
@@ -39,50 +39,64 @@ blueprint:
       name: ON - Triple Press
       default: []
       selector: {action: {}}
+    on_quadruple:
+      name: ON - Quadruple Press
+      default: []
+      selector: {action: {}}
+    on_quintuple:
+      name: ON - Quintuple Press
+      default: []
+      selector: {action: {}}
 
-mode: restart # Important: Restarts on every click to reset the "Wait" timer
+mode: restart
+max_exceeded: silent
 
 trigger:
   - platform: state
     entity_id: !input action_sensor
 
 condition:
+  # Trigger only on the 'press' signal, ignoring 'release' or 'hold'
   - condition: template
-    # Only trigger on 'press' events, ignore 'release' or 'hold' for the click counter
     value_template: "{{ 'press' in states(trigger.entity_id) and 'release' not in states(trigger.entity_id) }}"
 
 action:
   - variables:
       helper: !input helper_last_event
-      # Parse the JSON from our helper or set defaults
+      # Load existing JSON or defaults if empty
       last_data: >
         {% set val = states(helper) %}
-        {{ val if val != 'unknown' and val != '' else '{"count":0, "last_time":0, "button":""}' }}
+        {{ val if val != 'unknown' and val != '' and '{' in val else '{"count":0, "last_time":0, "button":""}' }}
       last_count: "{{ (last_data | from_json).count | int }}"
       last_time: "{{ (last_data | from_json).last_time | float }}"
       last_button: "{{ (last_data | from_json).button }}"
       current_button: "{{ states(trigger.entity_id).split('_')[0] }}"
       now_ms: "{{ as_timestamp(now()) * 1000 }}"
       timeout: !input click_timeout
+      # Calculate new state
+      new_count: >
+        {% if (now_ms - last_time < timeout) and (last_button == current_button) %}
+          {{ last_count + 1 }}
+        {% else %}
+          1
+        {% endif %}
 
-  - variant: >
-      {% set new_count = (last_count + 1) if (now_ms - last_time < timeout and last_button == current_button) else 1 %}
-      {% set new_data = {'count': new_count, 'last_time': now_ms, 'button': current_button} %}
-      {{ new_data | to_json }}
-    service: input_text.set_value
+  # Update the Helper immediately
+  - service: input_text.set_value
     target:
       entity_id: !input helper_last_event
     data:
-      value: "{{ new_data }}"
+      value: >
+        {{ {'count': new_count | int, 'last_time': now_ms | float, 'button': current_button} | to_json }}
 
-  # Wait to see if another click comes in
+  # Wait for the timeout. If another click happens, mode: restart kills this run.
   - delay:
       milliseconds: !input click_timeout
 
-  # If we got here without the automation being "restarted" by a new click, execute
+  # If we reached here, the clicking has stopped. Execute based on final count.
   - variables:
       final_data: "{{ states(helper) | from_json }}"
-      final_count: "{{ final_data.count }}"
+      final_count: "{{ final_data.count | int }}"
       final_button: "{{ final_data.button }}"
 
   - choose:
@@ -96,8 +110,12 @@ action:
                 sequence: !input on_double
               - conditions: "{{ final_count == 3 }}"
                 sequence: !input on_triple
+              - conditions: "{{ final_count == 4 }}"
+                sequence: !input on_quadruple
+              - conditions: "{{ final_count == 5 }}"
+                sequence: !input on_quintuple
 
-  # Reset helper after execution so the next press starts fresh
+  # Reset helper so the next fresh interaction starts at 1
   - service: input_text.set_value
     target:
       entity_id: !input helper_last_event
