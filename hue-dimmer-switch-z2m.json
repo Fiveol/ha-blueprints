@@ -1,5 +1,5 @@
 blueprint:
-  name: Philips Hue Dimmer Z2M (Event-based)
+  name: Philips Hue Dimmer Z2M
   domain: automation
   input:
     event_entity:
@@ -215,7 +215,7 @@ blueprint:
       default: []
       selector: {action: {}}
 
-mode: restart
+mode: queued
 max_exceeded: silent
 
 trigger:
