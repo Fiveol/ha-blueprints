@@ -1,19 +1,16 @@
 blueprint:
-  name: Philips Hue Dimmer Z2M
+  name: Philips Hue Dimmer Z2M (Event-based)
   domain: automation
   input:
     event_entity:
       name: Event Entity
+      description: The 'event.' entity corresponding to your Hue switch.
       selector:
         entity:
           domain: event
-    sensor_entity:
-      name: Sensor Entity
-      selector:
-        entity:
-          domain: sensor
     counter_helper:
       name: Counter Helper
+      description: An input_text helper used to track multi-click counts.
       selector:
         entity:
           domain: input_text
@@ -227,8 +224,8 @@ trigger:
 
 action:
   - variables:
-      sensor: !input sensor_entity
-      raw_state: "{{ states(sensor) }}"
+      # Reads directly from the event payload attribute instead of a separate sensor entity
+      raw_state: "{{ trigger.to_state.attributes.event_type | default('') }}"
       helper: !input counter_helper
 
   - choose:
